@@ -1,0 +1,5 @@
+<repo>\.venv\lib\site-packages\torchvision\transforms\transforms.py:257: UserWarning: Argument interpolation should be of type InterpolationMode instead of int. Please, use InterpolationMode enum.
+  warnings.warn(
+Train Epoch: 1 dl: 0/89999 Loss: 0.007828
+Saving checkpoint: ./outputs\vram_probe_b2_20261107_054714\checkpoint-epoch1.pth ...
+Training stopped at step 20: step_limit

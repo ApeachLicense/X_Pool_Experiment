@@ -1,0 +1,2 @@
+elapsed_seconds,step,epoch,batch_index,batch_size,loss,step_seconds,allocated_mib,reserved_mib,peak_allocated_mib,peak_reserved_mib,clip_lr,noclip_lr
+9.578,62221,2,17220,4,1.3411042232291948e-07,9.578,2362.189,4310.0,3716.919,4310.0,9.08030690645774e-07,2.724092071937322e-05

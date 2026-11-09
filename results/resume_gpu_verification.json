@@ -1,0 +1,16 @@
+{
+  "verified": true,
+  "comparison": "4 continuous GPU updates versus 2 + resume + 2 GPU updates",
+  "start_global_step": 62216,
+  "end_global_step": 62220,
+  "model_tensors": 416,
+  "bitwise_equal": {
+    "state_dict": true,
+    "optimizer": true,
+    "lr_scheduler": true,
+    "random_state": true,
+    "data_state": true
+  },
+  "dataset_epoch": 2,
+  "next_batch": 17220
+}

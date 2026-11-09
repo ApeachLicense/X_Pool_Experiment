@@ -1,0 +1,34 @@
+# Local environments and caches
+/.venv/
+/venv/
+/.cache/
+**/__pycache__/
+*.py[cod]
+/.pytest_cache/
+/.idea/
+/.vscode/
+
+# Downloaded media, model weights and new run outputs
+/data/**/vids/
+/downloads/
+/openai/
+/outputs/
+/logs/
+*.pth
+*.pt
+*.bin
+*.safetensors
+*.mp4
+*.avi
+*.mkv
+*.zip
+*.part
+
+# Local credentials and operating-system files
+.env
+.env.*
+*.pem
+*.key
+Thumbs.db
+desktop.ini
+.DS_Store

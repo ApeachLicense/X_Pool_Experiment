@@ -1,0 +1,19 @@
+{
+  "started_at_utc": "2026-11-09T07:04:50.446901+00:00",
+  "completed_at_utc": "2026-11-09T07:05:06.014021+00:00",
+  "command": [
+    "python",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "tests",
+    "-v"
+  ],
+  "cuda_visible_devices": "-1",
+  "python_version": "3.9.18 (main, Sep 11 2023, 14:09:26) [MSC v.1916 64 bit (AMD64)]",
+  "wall_time_seconds": 15.564,
+  "exit_code": 0,
+  "preflight_fix": "The first test invocation found that tests assumed outputs/ already existed. setUp now creates that directory, allowing tests to run from a fresh clone. Training/model code was not changed for publication.",
+  "note": "Ran the existing CPU regression suite on the exported checkout using the original experiment Python environment. No GPU training or evaluation was started."
+}

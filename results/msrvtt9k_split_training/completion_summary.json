@@ -1,0 +1,103 @@
+{
+  "completed": true,
+  "verified_at_utc": "2026-11-09T06:48:31.788401+00:00",
+  "training": {
+    "epochs_completed": 5,
+    "global_step": 225000,
+    "total_pairs_processed": 900000,
+    "batch_size": 4,
+    "precision": "float32",
+    "num_frames": 12,
+    "input_resolution": 224,
+    "total_training_and_checkpoint_seconds": 78934.03099999999,
+    "total_training_hours": 21.926119722222218,
+    "sessions": [
+      {
+        "name": "initial_6h",
+        "steps": 62216,
+        "elapsed_seconds": 21603.938,
+        "peak_gpu_mib": 6751.0
+      },
+      {
+        "name": "second_7h",
+        "steps": 72465,
+        "elapsed_seconds": 25207.64,
+        "peak_gpu_mib": 6748.0
+      },
+      {
+        "name": "final_max10h",
+        "steps": 90319,
+        "elapsed_seconds": 32122.453,
+        "process_wall_seconds": 32141.156,
+        "peak_gpu_mib": 6646.0,
+        "started_at_utc": "2026-11-08T21:49:39.509985+00:00",
+        "finished_at_utc": "2026-11-09T06:45:01.782060+00:00"
+      }
+    ],
+    "peak_device_memory_mib": 6751.0,
+    "peak_device_memory_gib": 6.5927734375,
+    "device_memory_note": "Includes desktop and other processes; nvidia-smi sampling.",
+    "max_temperature_c": 73.31,
+    "cuda_memory_errors": 0,
+    "all_training_losses_finite": true
+  },
+  "final_checkpoint": {
+    "path": "<repo>\\outputs\\msrvtt9k_split_training\\checkpoint-epoch5.pth",
+    "sha256": "cae2e62e18282026e2e6d9703cc8d0ef5e77f9b7dcb795685a088aec86ddfd8a",
+    "verified": true,
+    "latest_checkpoint_identical": true
+  },
+  "final_evaluation": {
+    "checkpoint": "<repo>\\outputs\\msrvtt9k_split_training\\checkpoint-epoch5.pth",
+    "protocol": "MSR-VTT 1K-A text-to-video retrieval",
+    "evaluation_pairs": 1000,
+    "command": [
+      "<repo>\\.venv\\Scripts\\python.exe",
+      "-u",
+      "test.py",
+      "--exp_name=msrvtt9k_split_training",
+      "--videos_dir=data/MSRVTT/vids",
+      "--batch_size=4",
+      "--num_workers=2",
+      "--huggingface",
+      "--load_epoch=5",
+      "--dataset_name=MSRVTT",
+      "--msrvtt_train_file=9k",
+      "--no_tensorboard",
+      "--tb_log_dir=logs/final_evaluation_20261109"
+    ],
+    "exit_code": 0,
+    "wall_time_seconds": 147.192,
+    "metrics": {
+      "R@1": 39.9,
+      "R@5": 67.7,
+      "R@10": 77.7,
+      "MedR": 2.0,
+      "MeanR": 14.002
+    },
+    "completed_at_utc": "2026-11-09T06:47:32.417378+00:00"
+  },
+  "official_pretrained_checkpoint_evaluation": {
+    "report": "outputs/msrvtt9k/evaluation_report.json",
+    "metrics": {
+      "R@1": 46.9,
+      "R@5": 72.8,
+      "R@10": 82.2,
+      "MedR": 2.0,
+      "MeanR": 14.291
+    },
+    "wall_time_seconds": 138.704
+  },
+  "recall_at_1_difference_percentage_points": -7.0,
+  "notes": [
+    "This verifies RTX 3060 Ti 8 GiB feasibility using training batch size 4. The paper uses batch size 32; contrastive negatives and training conditions differ.",
+    "The first 62216-step legacy checkpoint did not contain shuffle/RNG snapshots. Deterministic shuffle and exact saved RNG resume apply from that transition onward.",
+    "Validation during training was disabled. The evaluated model is the final fifth-epoch checkpoint."
+  ],
+  "evidence": {
+    "profile": "outputs\\msrvtt9k_split_training\\training_profile.json",
+    "monitor": "outputs\\msrvtt9k_split_training\\monitor_report.json",
+    "checkpoint_verification": "outputs\\msrvtt9k_split_training\\checkpoint_verification.json",
+    "final_evaluation_log": "outputs\\msrvtt9k_split_training\\final_evaluation.log"
+  }
+}

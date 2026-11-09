@@ -1,0 +1,5 @@
+* text=auto
+
+# Preserve exported evidence exactly, including CSV/log line endings.
+/results/** -text
+*.png binary

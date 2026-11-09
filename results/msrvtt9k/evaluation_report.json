@@ -1,0 +1,38 @@
+{
+  "command": [
+    "<repo>\\.venv\\Scripts\\python.exe",
+    "-u",
+    "test.py",
+    "--exp_name=msrvtt9k",
+    "--videos_dir=data/MSRVTT/vids",
+    "--batch_size=4",
+    "--num_workers=2",
+    "--huggingface",
+    "--load_epoch=-1",
+    "--dataset_name=MSRVTT",
+    "--msrvtt_train_file=9k",
+    "--no_tensorboard"
+  ],
+  "source_commit": "bc88718199007d395136adc99a3e69adbee874a0",
+  "python_version": "3.9.18 (main, Sep 11 2023, 14:09:26) [MSC v.1916 64 bit (AMD64)]",
+  "packages": {
+    "torch": "1.8.1+cu111",
+    "torchvision": "0.9.1+cu111",
+    "transformers": "4.6.1",
+    "opencv-python": "4.5.3.56",
+    "numpy": "1.22.4"
+  },
+  "exit_code": 0,
+  "wall_time_seconds": 138.704,
+  "gpu_memory_sample_interval_seconds": 1,
+  "gpu_device_memory_before_mib": 804,
+  "gpu_device_memory_peak_mib": 4461,
+  "gpu_memory_note": "nvidia-smi device total includes desktop and other processes",
+  "metrics": {
+    "R@1": 46.9,
+    "R@5": 72.8,
+    "R@10": 82.2,
+    "MedR": 2.0,
+    "MeanR": 14.291
+  }
+}

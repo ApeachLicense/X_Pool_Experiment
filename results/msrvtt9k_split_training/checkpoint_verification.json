@@ -1,0 +1,63 @@
+{
+  "verified": true,
+  "verified_at_utc": "2026-11-09T06:46:16.343921+00:00",
+  "checkpoint": "outputs\\msrvtt9k_split_training\\checkpoint-epoch5.pth",
+  "checkpoint_bytes": 1833014183,
+  "sha256": "cae2e62e18282026e2e6d9703cc8d0ef5e77f9b7dcb795685a088aec86ddfd8a",
+  "latest_checkpoint_identical": true,
+  "global_step": 225000,
+  "epoch": 5,
+  "partial_epoch": false,
+  "data_state": {
+    "epoch": 5,
+    "next_batch": 45000,
+    "dataset_size": 180000,
+    "batch_size": 4,
+    "seed": 24
+  },
+  "optimizer_steps": [
+    225000
+  ],
+  "scheduler_last_epoch": 225000,
+  "final_learning_rates": [
+    0.0,
+    0.0
+  ],
+  "model_tensors": 416,
+  "all_model_tensors_finite": true,
+  "random_state_saved": true,
+  "legacy_transition_step": 62216,
+  "csv_checks": [
+    {
+      "csv": "outputs\\msrvtt9k_train_vram_20261107_054714\\training_steps.csv",
+      "rows": 62216,
+      "first_global_step": 1,
+      "last_global_step": 62216,
+      "processed_pairs": 248864,
+      "all_losses_finite": true,
+      "mean_loss": 0.18405426737818534
+    },
+    {
+      "csv": "outputs\\msrvtt9k_split_training\\training_steps.csv",
+      "rows": 72465,
+      "first_global_step": 62217,
+      "last_global_step": 134681,
+      "processed_pairs": 289860,
+      "all_losses_finite": true,
+      "mean_loss": 0.11558012606908176
+    },
+    {
+      "csv": "outputs\\msrvtt9k_split_training\\sessions\\20261108_214939_509985\\training_steps.csv",
+      "rows": 90319,
+      "first_global_step": 134682,
+      "last_global_step": 225000,
+      "processed_pairs": 361276,
+      "all_losses_finite": true,
+      "mean_loss": 0.06522759922354379
+    }
+  ],
+  "total_training_pairs_processed": 900000,
+  "training_exit_code": 0,
+  "training_log_error_matches": 0,
+  "telemetry_errors": []
+}

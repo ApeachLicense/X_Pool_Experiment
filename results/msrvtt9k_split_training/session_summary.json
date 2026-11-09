@@ -1,0 +1,21 @@
+{
+  "verified": true,
+  "session_hours": 7,
+  "session_steps": 72465,
+  "initial_global_step": 62216,
+  "global_step": 134681,
+  "training_seconds_last_step": 25200.296,
+  "training_and_checkpoint_seconds": 25207.64,
+  "gpu_peak_mib": 6748.0,
+  "gpu_peak_gib": 6.58984375,
+  "max_temperature_c": 73.31,
+  "cuda_memory_errors": 0,
+  "shuffle_and_rng_saved": true,
+  "checkpoint": "checkpoint-last.pth",
+  "completed_epochs": 2.9929111111111113,
+  "target_epochs": 5,
+  "completion_percent": 59.858222222222224,
+  "remaining_steps": 90319,
+  "estimated_remaining_hours": 8.724769560877156,
+  "mean_step_seconds": 0.34775817291110134
+}

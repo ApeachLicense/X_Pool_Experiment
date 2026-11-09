@@ -1,0 +1,8 @@
+[W ..\aten\src\ATen\Context.cpp:70] Warning: torch.use_deterministic_algorithms is in beta, and its design and functionality may change in the future. (function operator ())
+<user-home>\OneDrive\Desktop\���ǰ���2\xpool\.venv\lib\site-packages\torchvision\transforms\transforms.py:257: UserWarning: Argument interpolation should be of type InterpolationMode instead of int. Please, use InterpolationMode enum.
+  warnings.warn(
+Loading checkpoint: outputs/resume_gpu_smoke/checkpoint-last.pth ...
+Resuming at global step 62218, epoch 2, batch 17218
+Checkpoint loaded
+Saving checkpoint: ./outputs\resume_gpu_smoke\checkpoint-epoch2.pth ...
+Training stopped at step 62220: step_limit

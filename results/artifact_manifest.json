@@ -1,0 +1,629 @@
+{
+  "exported_at_utc": "2026-11-09T07:00:29.185366+00:00",
+  "upstream_repository": "https://github.com/layer6ai-labs/xpool",
+  "upstream_commit": "bc88718199007d395136adc99a3e69adbee874a0",
+  "description": "Measured artifacts exported from the existing experiment. Local absolute paths are replaced by <repo> or <user-home>; numeric results are preserved. No new GPU training or evaluation was run for this export.",
+  "artifacts": [
+    {
+      "source": "downloads/clip_manifest.json",
+      "export": "results/dataset_manifests/clip_manifest.json",
+      "source_bytes": 251,
+      "export_bytes": 247,
+      "source_sha256": "11af37be7a48c46074ba77945be50416cc6c9e064072c75a8d418bfb8878f4f6",
+      "export_sha256": "ca2515f7a8fb2f6ce104a1d7b21acf5dd1e16a69c28f148241f377365b0e2bd9",
+      "local_paths_redacted": false
+    },
+    {
+      "source": "downloads/msrvtt_1ka_manifest.json",
+      "export": "results/dataset_manifests/msrvtt_1ka_manifest.json",
+      "source_bytes": 98342,
+      "export_bytes": 93336,
+      "source_sha256": "a50937946163704ef9bb57dca199628d161aaa6766223442da6535fc23c24e18",
+      "export_sha256": "237d8c2aeaef65d526c9a56c15312d375385c0aed27d86e6fc9987a58edab435",
+      "local_paths_redacted": false
+    },
+    {
+      "source": "downloads/msrvtt_9k_train_manifest.json",
+      "export": "results/dataset_manifests/msrvtt_9k_train_manifest.json",
+      "source_bytes": 882377,
+      "export_bytes": 837371,
+      "source_sha256": "d09ec955797aa642b961e55266ddad5a26b9eaf44685bf89e4c5c58d9934d98a",
+      "export_sha256": "ae67ec05145e0836e59b7ea6f9d24bb1bfa958c3a32b6d518f346a50e4fab335",
+      "local_paths_redacted": false
+    },
+    {
+      "source": "outputs/msrvtt9k/evaluation.log",
+      "export": "results/msrvtt9k/evaluation.log",
+      "source_bytes": 4807,
+      "export_bytes": 4762,
+      "source_sha256": "c4122789b8ef5a75af09d58b2e4c030c6bf124182827bec9a41ae47b5407f6c0",
+      "export_sha256": "9e415f424d7e124fddccf365bf61c7c14d14a2fdbacb60a7cbe5e85107df966b",
+      "local_paths_redacted": true
+    },
+    {
+      "source": "outputs/msrvtt9k/evaluation_report.json",
+      "export": "results/msrvtt9k/evaluation_report.json",
+      "source_bytes": 1106,
+      "export_bytes": 1007,
+      "source_sha256": "f650a60214ffaaa9483b6dbc04ced0374ba0cb076b85d156c77ae518a0fd5a15",
+      "export_sha256": "5046254af9f4652a51c9e704bab0828820a8e7f9969d7f86c4c6d2702b82e190",
+      "local_paths_redacted": true
+    },
+    {
+      "source": "outputs/msrvtt9k_split_training/checkpoint_verification.json",
+      "export": "results/msrvtt9k_split_training/checkpoint_verification.json",
+      "source_bytes": 1834,
+      "export_bytes": 1773,
+      "source_sha256": "a5592887915d781a0355f0397dfc916cbac26cb45a4d346eab4a7ccc686778d9",
+      "export_sha256": "813853478a0a559c2eb573f2cf8883181433890c38fca204d27cfbd54d3c25f2",
+      "local_paths_redacted": false
+    },
+    {
+      "source": "outputs/msrvtt9k_split_training/completion_summary.json",
+      "export": "results/msrvtt9k_split_training/completion_summary.json",
+      "source_bytes": 3769,
+      "export_bytes": 3515,
+      "source_sha256": "d60d2f26a2d0b2950db240111b07c74b27b27132ca084aecb0cdc1775832ac4d",
+      "export_sha256": "44dde74ca8b13187b0f933d4a26da17d1c84d4034c4165209a1310298806005d",
+      "local_paths_redacted": true
+    },
+    {
+      "source": "outputs/msrvtt9k_split_training/final_evaluation.json",
+      "export": "results/msrvtt9k_split_training/final_evaluation.json",
+      "source_bytes": 926,
+      "export_bytes": 772,
+      "source_sha256": "130b49ff4fe775150f3dc24c9893563be40e4875e36da3f1ff01d0398ead840b",
+      "export_sha256": "51caec7e7e8bfc1088e5661d786f7de6808515083204e5966377b1d61e9155c9",
+      "local_paths_redacted": true
+    },
+    {
+      "source": "outputs/msrvtt9k_split_training/final_evaluation.log",
+      "export": "results/msrvtt9k_split_training/final_evaluation.log",
+      "source_bytes": 4538,
+      "export_bytes": 4493,
+      "source_sha256": "543cdc323a1945a57453e0b3492097ecbdaec997d4c1fb2b1049f481b8441384",
+      "export_sha256": "515acb19b93c47fb4156cc85114bf53150060fdd3da199540775bd48f9f5a2a8",
+      "local_paths_redacted": true
+    },
+    {
+      "source": "outputs/msrvtt9k_split_training/gpu_samples.csv",
+      "export": "results/msrvtt9k_split_training/gpu_samples.csv",
+      "source_bytes": 372793,
+      "export_bytes": 372793,
+      "source_sha256": "fd3f5154fa85b5377c2ef555115f45e1544257931efa582d9dd7c665d7ae62d8",
+      "export_sha256": "fd3f5154fa85b5377c2ef555115f45e1544257931efa582d9dd7c665d7ae62d8",
+      "local_paths_redacted": false
+    },
+    {
+      "source": "outputs/msrvtt9k_split_training/monitor_report.json",
+      "export": "results/msrvtt9k_split_training/monitor_report.json",
+      "source_bytes": 4283,
+      "export_bytes": 3792,
+      "source_sha256": "c45d2e05d5e4d2832643bb947a77b5e0b3d98f57b4ed9a5f5bd49808bf494380",
+      "export_sha256": "29485aba3a3956e02c9ba208993a3e178723ebdb44cb585675c841e10c7b520c",
+      "local_paths_redacted": true
+    },
+    {
+      "source": "outputs/msrvtt9k_split_training/session_summary.json",
+      "export": "results/msrvtt9k_split_training/session_summary.json",
+      "source_bytes": 652,
+      "export_bytes": 633,
+      "source_sha256": "0a9862d94af2f619e17b7d0d4ce0b59cce37cd920fc62937cb639ef317ac6774",
+      "export_sha256": "e37954fd47c0a8a125d6567e7a667bc39694f82459bfec9e3d1362de780ec481",
+      "local_paths_redacted": false
+    },
+    {
+      "source": "outputs/msrvtt9k_split_training/sessions/20261108_041753_104478/training_profile.json",
+      "export": "results/msrvtt9k_split_training/sessions/20261108_041753_104478/training_profile.json",
+      "source_bytes": 2237,
+      "export_bytes": 2104,
+      "source_sha256": "4773d430d6357078a87ec14580d611665994fee0824494a2155d4cc06bf506d3",
+      "export_sha256": "244933a18b87e55c196e907e2909d2519ce25d115da293b320068476441b91c7",
+      "local_paths_redacted": true
+    },
+    {
+      "source": "outputs/msrvtt9k_split_training/sessions/20261108_214939_509985/training_profile.json",
+      "export": "results/msrvtt9k_split_training/sessions/20261108_214939_509985/training_profile.json",
+      "source_bytes": 2233,
+      "export_bytes": 2100,
+      "source_sha256": "72b2f1007d7827383afc24d0616e1e2d4cf70353ebe15e05f2af3ae4eb129254",
+      "export_sha256": "0aab7d204c789fb6289541701df676471074ab02f9ee3cf2474b63bddaf20406",
+      "local_paths_redacted": true
+    },
+    {
+      "source": "outputs/msrvtt9k_split_training/sessions/20261108_214939_509985/training_steps.csv",
+      "export": "results/msrvtt9k_split_training/sessions/20261108_214939_509985/training_steps.csv",
+      "source_bytes": 11325786,
+      "export_bytes": 11325786,
+      "source_sha256": "417fa24882aadeaee66994ec00f6145b0deae1db2b413488cad9e6aa8e69e718",
+      "export_sha256": "417fa24882aadeaee66994ec00f6145b0deae1db2b413488cad9e6aa8e69e718",
+      "local_paths_redacted": false
+    },
+    {
+      "source": "outputs/msrvtt9k_split_training/sessions/monitor_20261108_041742_385766/monitor_report.json",
+      "export": "results/msrvtt9k_split_training/sessions/monitor_20261108_041742_385766/monitor_report.json",
+      "source_bytes": 4231,
+      "export_bytes": 3740,
+      "source_sha256": "1b00ccdd2ed458c49a6a2c1013a2607fc4aca109536c27cbc56475c36c238fb9",
+      "export_sha256": "5c37bb7720db2e47253b9f4156362ee4e8385434f5933e00761fca95ea7b46df",
+      "local_paths_redacted": true
+    },
+    {
+      "source": "outputs/msrvtt9k_split_training/sessions/monitor_20261108_214921_628776/gpu_samples.csv",
+      "export": "results/msrvtt9k_split_training/sessions/monitor_20261108_214921_628776/gpu_samples.csv",
+      "source_bytes": 476178,
+      "export_bytes": 476178,
+      "source_sha256": "c63f7f3de787a0d6d7fb262b258b3285d5e480580149adf976dd6ffd16188714",
+      "export_sha256": "c63f7f3de787a0d6d7fb262b258b3285d5e480580149adf976dd6ffd16188714",
+      "local_paths_redacted": false
+    },
+    {
+      "source": "outputs/msrvtt9k_split_training/sessions/monitor_20261108_214921_628776/monitor_report.json",
+      "export": "results/msrvtt9k_split_training/sessions/monitor_20261108_214921_628776/monitor_report.json",
+      "source_bytes": 4283,
+      "export_bytes": 3792,
+      "source_sha256": "c45d2e05d5e4d2832643bb947a77b5e0b3d98f57b4ed9a5f5bd49808bf494380",
+      "export_sha256": "29485aba3a3956e02c9ba208993a3e178723ebdb44cb585675c841e10c7b520c",
+      "local_paths_redacted": true
+    },
+    {
+      "source": "outputs/msrvtt9k_split_training/sessions/monitor_20261108_214921_628776/training.log",
+      "export": "results/msrvtt9k_split_training/sessions/monitor_20261108_214921_628776/training.log",
+      "source_bytes": 43414,
+      "export_bytes": 43324,
+      "source_sha256": "d9f5cbc5836f7489354bab38a4c68dfea3afb2b8d14a97dd9ace76e094e0fbf2",
+      "export_sha256": "54ee21aa798e9091f60d34dafb91fc392425e811a20e7e1d7fd64dbf3e7c3f7a",
+      "local_paths_redacted": true
+    },
+    {
+      "source": "outputs/msrvtt9k_split_training/training.log",
+      "export": "results/msrvtt9k_split_training/training.log",
+      "source_bytes": 35031,
+      "export_bytes": 34941,
+      "source_sha256": "b9ad4d0d079853b679fc41f28bc22a48e0173943839969e86333098738388ecb",
+      "export_sha256": "6b296dea33c2f6816a4bb63c05f1bf47a85cbc5e0bbcea7ba14e93f7661c200d",
+      "local_paths_redacted": true
+    },
+    {
+      "source": "outputs/msrvtt9k_split_training/training_profile.json",
+      "export": "results/msrvtt9k_split_training/training_profile.json",
+      "source_bytes": 2233,
+      "export_bytes": 2100,
+      "source_sha256": "72b2f1007d7827383afc24d0616e1e2d4cf70353ebe15e05f2af3ae4eb129254",
+      "export_sha256": "0aab7d204c789fb6289541701df676471074ab02f9ee3cf2474b63bddaf20406",
+      "local_paths_redacted": true
+    },
+    {
+      "source": "outputs/msrvtt9k_split_training/training_steps.csv",
+      "export": "results/msrvtt9k_split_training/training_steps.csv",
+      "source_bytes": 9150674,
+      "export_bytes": 9150674,
+      "source_sha256": "dd248d3ef0de318ee5efd4b2e570b06e7c25c3a61da915e1b7b68ba974ee77f9",
+      "export_sha256": "dd248d3ef0de318ee5efd4b2e570b06e7c25c3a61da915e1b7b68ba974ee77f9",
+      "local_paths_redacted": false
+    },
+    {
+      "source": "outputs/msrvtt9k_train_vram_20261107_054714/gpu_samples.csv",
+      "export": "results/msrvtt9k_train_vram_20261107_054714/gpu_samples.csv",
+      "source_bytes": 318273,
+      "export_bytes": 318273,
+      "source_sha256": "da985900af2c470e742cce9a457ebd067b5c23368adee6d905cca996550110ae",
+      "export_sha256": "da985900af2c470e742cce9a457ebd067b5c23368adee6d905cca996550110ae",
+      "local_paths_redacted": false
+    },
+    {
+      "source": "outputs/msrvtt9k_train_vram_20261107_054714/measurement_summary.json",
+      "export": "results/msrvtt9k_train_vram_20261107_054714/measurement_summary.json",
+      "source_bytes": 840,
+      "export_bytes": 816,
+      "source_sha256": "80aa691ac5a99af362811173ba210e1b308bccf01154488bf73dc7ba0151437e",
+      "export_sha256": "491fcd792a63bbe81eded7b5c4af133b9240949f2f245245d1de11e4894649cf",
+      "local_paths_redacted": false
+    },
+    {
+      "source": "outputs/msrvtt9k_train_vram_20261107_054714/monitor_report.json",
+      "export": "results/msrvtt9k_train_vram_20261107_054714/monitor_report.json",
+      "source_bytes": 3339,
+      "export_bytes": 3172,
+      "source_sha256": "321bf39decddeaa5a200f0af95d4026b746c9043d7e03ad58f45265d904fd0c2",
+      "export_sha256": "c43ece7b8e8fa5f25172acab970d348aecb897a1a9dafde3b689c5bcd1e18ad6",
+      "local_paths_redacted": true
+    },
+    {
+      "source": "outputs/msrvtt9k_train_vram_20261107_054714/training.log",
+      "export": "results/msrvtt9k_train_vram_20261107_054714/training.log",
+      "source_bytes": 29606,
+      "export_bytes": 29561,
+      "source_sha256": "bc04ee6bc72637386bdb851392a43a25c8c5db6415b42651e0bd8b2709eef620",
+      "export_sha256": "fa924bc97bb80108c83ba63fc84aa6025aee9f9afcde97695e6ea5ce05587e66",
+      "local_paths_redacted": true
+    },
+    {
+      "source": "outputs/msrvtt9k_train_vram_20261107_054714/training_profile.json",
+      "export": "results/msrvtt9k_train_vram_20261107_054714/training_profile.json",
+      "source_bytes": 1984,
+      "export_bytes": 1918,
+      "source_sha256": "7bafa9ca0b7e024e8d6e1c3c40c2533509a8d956d7fb85ab40b2b452c282bcec",
+      "export_sha256": "10ebd92ecf9940a8aa3cda71ac3958237ce4e88325091cb43e0af76dbc008361",
+      "local_paths_redacted": false
+    },
+    {
+      "source": "outputs/msrvtt9k_train_vram_20261107_054714/training_steps.csv",
+      "export": "results/msrvtt9k_train_vram_20261107_054714/training_steps.csv",
+      "source_bytes": 7864636,
+      "export_bytes": 7864636,
+      "source_sha256": "0e0d544cfa4b67a5f65a5c0e00a53faed632f16c39ebb3cde0f3cbdd8f153041",
+      "export_sha256": "0e0d544cfa4b67a5f65a5c0e00a53faed632f16c39ebb3cde0f3cbdd8f153041",
+      "local_paths_redacted": false
+    },
+    {
+      "source": "outputs/msrvtt9k_train_vram_20261107_054714/vram_6h.png",
+      "export": "results/msrvtt9k_train_vram_20261107_054714/vram_6h.png",
+      "source_bytes": 83754,
+      "export_bytes": 83754,
+      "source_sha256": "75cd726ea70d682566a6ec81b7c8b28dc178e49412dfe2b18011007bd5123601",
+      "export_sha256": "75cd726ea70d682566a6ec81b7c8b28dc178e49412dfe2b18011007bd5123601",
+      "local_paths_redacted": false
+    },
+    {
+      "source": "outputs/resume_gpu_continuous/sessions/20261108_033353_147473/training_profile.json",
+      "export": "results/resume_gpu_continuous/sessions/20261108_033353_147473/training_profile.json",
+      "source_bytes": 2115,
+      "export_bytes": 2045,
+      "source_sha256": "0a8baadbc6fca5905d8c6cc2ed9e41ea88fd8db79b21e0697defa2e6ea1501dd",
+      "export_sha256": "44bb48a9095cd39c2bb5d53239a0b548757ae896b4a18d1ee4a8d115eb41b136",
+      "local_paths_redacted": false
+    },
+    {
+      "source": "outputs/resume_gpu_continuous/training_profile.json",
+      "export": "results/resume_gpu_continuous/training_profile.json",
+      "source_bytes": 2115,
+      "export_bytes": 2045,
+      "source_sha256": "0a8baadbc6fca5905d8c6cc2ed9e41ea88fd8db79b21e0697defa2e6ea1501dd",
+      "export_sha256": "44bb48a9095cd39c2bb5d53239a0b548757ae896b4a18d1ee4a8d115eb41b136",
+      "local_paths_redacted": false
+    },
+    {
+      "source": "outputs/resume_gpu_continuous/training_steps.csv",
+      "export": "results/resume_gpu_continuous/training_steps.csv",
+      "source_bytes": 636,
+      "export_bytes": 636,
+      "source_sha256": "67510c0a7a65d0465e45d2a6d34e68b3dd975c9d70ec18d7ca4d5ac875c18ea5",
+      "export_sha256": "67510c0a7a65d0465e45d2a6d34e68b3dd975c9d70ec18d7ca4d5ac875c18ea5",
+      "local_paths_redacted": false
+    },
+    {
+      "source": "outputs/resume_gpu_continuous.log",
+      "export": "results/resume_gpu_continuous.log",
+      "source_bytes": 839,
+      "export_bytes": 836,
+      "source_sha256": "795a78f1925dacaaa3b28c960eeaba895ee7c178e38e3b89e837d3bf61405ad4",
+      "export_sha256": "3b446e2529bd9a16bec9d3c339b28c3e5decf1fabcd5c04afaac5e76f8688460",
+      "local_paths_redacted": true
+    },
+    {
+      "source": "outputs/resume_gpu_smoke/sessions/20261108_033051_768863/training_profile.json",
+      "export": "results/resume_gpu_smoke/sessions/20261108_033051_768863/training_profile.json",
+      "source_bytes": 2111,
+      "export_bytes": 2041,
+      "source_sha256": "6ed6c91cd73cd8a9cd9f7929c88f911f7c1952d4e1645997857e9acdf5b30e21",
+      "export_sha256": "8c29b752bc5c1f62f69c296fefc41d00354fa823104a9d86c3a8a8e6422005a6",
+      "local_paths_redacted": false
+    },
+    {
+      "source": "outputs/resume_gpu_smoke/sessions/20261108_033420_451310/training_profile.json",
+      "export": "results/resume_gpu_smoke/sessions/20261108_033420_451310/training_profile.json",
+      "source_bytes": 2108,
+      "export_bytes": 2038,
+      "source_sha256": "8f2bbd07cf9fa9e30d5879e59c07c9db51dabd981a04f2a012085edbee54d3f8",
+      "export_sha256": "f663348e14ca8babc9f737099724468ab85535b57c8e583a281d5e7be95de43c",
+      "local_paths_redacted": false
+    },
+    {
+      "source": "outputs/resume_gpu_smoke/sessions/20261108_033420_451310/training_steps.csv",
+      "export": "results/resume_gpu_smoke/sessions/20261108_033420_451310/training_steps.csv",
+      "source_bytes": 388,
+      "export_bytes": 388,
+      "source_sha256": "51be3c88d09abdc6cf3faf35b763722799d3670bdbbd72dbd8c42b6c821a5fe6",
+      "export_sha256": "51be3c88d09abdc6cf3faf35b763722799d3670bdbbd72dbd8c42b6c821a5fe6",
+      "local_paths_redacted": false
+    },
+    {
+      "source": "outputs/resume_gpu_smoke/training_profile.json",
+      "export": "results/resume_gpu_smoke/training_profile.json",
+      "source_bytes": 2108,
+      "export_bytes": 2038,
+      "source_sha256": "8f2bbd07cf9fa9e30d5879e59c07c9db51dabd981a04f2a012085edbee54d3f8",
+      "export_sha256": "f663348e14ca8babc9f737099724468ab85535b57c8e583a281d5e7be95de43c",
+      "local_paths_redacted": false
+    },
+    {
+      "source": "outputs/resume_gpu_smoke/training_steps.csv",
+      "export": "results/resume_gpu_smoke/training_steps.csv",
+      "source_bytes": 407,
+      "export_bytes": 407,
+      "source_sha256": "78d640dffe5c0865c61251c18b812f7bb6226f15546956f1017176f3bec276c7",
+      "export_sha256": "78d640dffe5c0865c61251c18b812f7bb6226f15546956f1017176f3bec276c7",
+      "local_paths_redacted": false
+    },
+    {
+      "source": "outputs/resume_gpu_split.log",
+      "export": "results/resume_gpu_split.log",
+      "source_bytes": 703,
+      "export_bytes": 700,
+      "source_sha256": "80ddaaf20ca688c5faa132ad4afe146cefbda616ebb9d3259df7a8ac097cadaf",
+      "export_sha256": "c73a4d81de99163301f3a672737ec7501b49416bb5db8556f273b22b63bcc7f0",
+      "local_paths_redacted": true
+    },
+    {
+      "source": "outputs/resume_gpu_verification.json",
+      "export": "results/resume_gpu_verification.json",
+      "source_bytes": 390,
+      "export_bytes": 376,
+      "source_sha256": "03ff3d2efbfe5e84ab0bf8d02b5b8efddb1bb18872dd823e34a8e4bc9b796659",
+      "export_sha256": "2403a6d7a0f131c90bebffa5fb8a1dbbdba296714f29e892682b6843cdf916fb",
+      "local_paths_redacted": false
+    },
+    {
+      "source": "outputs/resume_session_entry_first.log",
+      "export": "results/resume_session_entry_first.log",
+      "source_bytes": 5280,
+      "export_bytes": 4650,
+      "source_sha256": "208ea4aaae1b8fc2184366b8e327f014e8d928bb183f6531cb1462cc1f4013f6",
+      "export_sha256": "3eed67be1c7c1483219001e6acb07b050516f4e434d7710075ea90c1939164c9",
+      "local_paths_redacted": true
+    },
+    {
+      "source": "outputs/resume_session_entry_second.log",
+      "export": "results/resume_session_entry_second.log",
+      "source_bytes": 5442,
+      "export_bytes": 4812,
+      "source_sha256": "bca0518debfa8d841bce9feb7386f25731be877706fce89b8bc7c61dca21a10a",
+      "export_sha256": "d068bfa10bc672065babe72e203288540a5f18990b476a84bd8e79100e50328d",
+      "local_paths_redacted": true
+    },
+    {
+      "source": "outputs/resume_session_entry_test/gpu_samples.csv",
+      "export": "results/resume_session_entry_test/gpu_samples.csv",
+      "source_bytes": 528,
+      "export_bytes": 528,
+      "source_sha256": "20ea28e25dde464e9872b2351f83fa5197541f90fe97c43253cc4c146e78902d",
+      "export_sha256": "20ea28e25dde464e9872b2351f83fa5197541f90fe97c43253cc4c146e78902d",
+      "local_paths_redacted": false
+    },
+    {
+      "source": "outputs/resume_session_entry_test/monitor_report.json",
+      "export": "results/resume_session_entry_test/monitor_report.json",
+      "source_bytes": 4356,
+      "export_bytes": 3865,
+      "source_sha256": "2b4555d354ce56661e9742ec5ac4f230981abb58c92a2d2ec443894c5accae39",
+      "export_sha256": "49f6c5a9175d1d7d968b7ddda8bbab316aa987ecb33447e201282a723931a922",
+      "local_paths_redacted": true
+    },
+    {
+      "source": "outputs/resume_session_entry_test/sessions/20261108_033730_548499/training_profile.json",
+      "export": "results/resume_session_entry_test/sessions/20261108_033730_548499/training_profile.json",
+      "source_bytes": 2237,
+      "export_bytes": 2104,
+      "source_sha256": "010f8eb97bc95e3fc5d4d32507ed3b1d2d003f7ad64164133b882f86da92f003",
+      "export_sha256": "3404437546b0221aae505440fc2c77e07d72a65fe63cb5207edf499d6e784ea1",
+      "local_paths_redacted": true
+    },
+    {
+      "source": "outputs/resume_session_entry_test/sessions/20261108_033803_756785/training_profile.json",
+      "export": "results/resume_session_entry_test/sessions/20261108_033803_756785/training_profile.json",
+      "source_bytes": 2280,
+      "export_bytes": 2147,
+      "source_sha256": "cf8cb2db46768a7586864d69005982d5a2a8330c9758c7d21040ec019fa82c52",
+      "export_sha256": "8021d2b445ee4f162b2c744026b10c8dbe7f9296eaf2967a825db661243534bc",
+      "local_paths_redacted": true
+    },
+    {
+      "source": "outputs/resume_session_entry_test/sessions/20261108_033803_756785/training_steps.csv",
+      "export": "results/resume_session_entry_test/sessions/20261108_033803_756785/training_steps.csv",
+      "source_bytes": 282,
+      "export_bytes": 282,
+      "source_sha256": "57d8f80776ef608eb9d9adf67ee10d27729368d2025b462e6c6515453af78ac2",
+      "export_sha256": "57d8f80776ef608eb9d9adf67ee10d27729368d2025b462e6c6515453af78ac2",
+      "local_paths_redacted": false
+    },
+    {
+      "source": "outputs/resume_session_entry_test/sessions/monitor_20261108_033722_002455/monitor_report.json",
+      "export": "results/resume_session_entry_test/sessions/monitor_20261108_033722_002455/monitor_report.json",
+      "source_bytes": 4212,
+      "export_bytes": 3721,
+      "source_sha256": "6b163ec0629bb6b11b38b4aea30508bba1c0d915d16891e442d0fc58cd4d93b5",
+      "export_sha256": "f49f7f356206f858e87b219aa86bdf212ed1f50fd95f1c516485a74114e63e45",
+      "local_paths_redacted": true
+    },
+    {
+      "source": "outputs/resume_session_entry_test/sessions/monitor_20261108_033753_805178/gpu_samples.csv",
+      "export": "results/resume_session_entry_test/sessions/monitor_20261108_033753_805178/gpu_samples.csv",
+      "source_bytes": 677,
+      "export_bytes": 677,
+      "source_sha256": "d381c5deec58317bc0064374f49ff482216f1cb04d2eef2568c7ecd0345fb675",
+      "export_sha256": "d381c5deec58317bc0064374f49ff482216f1cb04d2eef2568c7ecd0345fb675",
+      "local_paths_redacted": false
+    },
+    {
+      "source": "outputs/resume_session_entry_test/sessions/monitor_20261108_033753_805178/monitor_report.json",
+      "export": "results/resume_session_entry_test/sessions/monitor_20261108_033753_805178/monitor_report.json",
+      "source_bytes": 4356,
+      "export_bytes": 3865,
+      "source_sha256": "2b4555d354ce56661e9742ec5ac4f230981abb58c92a2d2ec443894c5accae39",
+      "export_sha256": "49f6c5a9175d1d7d968b7ddda8bbab316aa987ecb33447e201282a723931a922",
+      "local_paths_redacted": true
+    },
+    {
+      "source": "outputs/resume_session_entry_test/sessions/monitor_20261108_033753_805178/training.log",
+      "export": "results/resume_session_entry_test/sessions/monitor_20261108_033753_805178/training.log",
+      "source_bytes": 764,
+      "export_bytes": 674,
+      "source_sha256": "cc765d8726c7321d64509c95911e0fe69d572bd36b7dd5c02866a18e3643ff49",
+      "export_sha256": "bbe7e7f7bc243cbcc38361223ed739af12914c5a8bb734e2fd35a7edeced3b0f",
+      "local_paths_redacted": true
+    },
+    {
+      "source": "outputs/resume_session_entry_test/training.log",
+      "export": "results/resume_session_entry_test/training.log",
+      "source_bytes": 755,
+      "export_bytes": 665,
+      "source_sha256": "3c550739c0fc3ea258b537e9fc879e05c2e06458bc26fb1e19b9b2ef5d8c99ae",
+      "export_sha256": "2eca997b89817c95c84ab068eaf1e0415a25b5144ec1e560abd11387cabc15ae",
+      "local_paths_redacted": true
+    },
+    {
+      "source": "outputs/resume_session_entry_test/training_profile.json",
+      "export": "results/resume_session_entry_test/training_profile.json",
+      "source_bytes": 2280,
+      "export_bytes": 2147,
+      "source_sha256": "cf8cb2db46768a7586864d69005982d5a2a8330c9758c7d21040ec019fa82c52",
+      "export_sha256": "8021d2b445ee4f162b2c744026b10c8dbe7f9296eaf2967a825db661243534bc",
+      "local_paths_redacted": true
+    },
+    {
+      "source": "outputs/resume_session_entry_test/training_steps.csv",
+      "export": "results/resume_session_entry_test/training_steps.csv",
+      "source_bytes": 278,
+      "export_bytes": 278,
+      "source_sha256": "535e2203ef2e4e7027827c85043868c9b2e9b5eeb767cfbac4eb342b8f85ca7a",
+      "export_sha256": "535e2203ef2e4e7027827c85043868c9b2e9b5eeb767cfbac4eb342b8f85ca7a",
+      "local_paths_redacted": false
+    },
+    {
+      "source": "outputs/resume_tests.log",
+      "export": "results/resume_tests.log",
+      "source_bytes": 5904,
+      "export_bytes": 5823,
+      "source_sha256": "57e8269e9db91771b3a9ac50dc1f2bf39128e441543e2bc81b84eca961207a5f",
+      "export_sha256": "0118123ee283acf6cd81d1ebefb7df2f932063d1a846b4c314936e08acc4c441",
+      "local_paths_redacted": true
+    },
+    {
+      "source": "outputs/setup.log",
+      "export": "results/setup.log",
+      "source_bytes": 38255,
+      "export_bytes": 38255,
+      "source_sha256": "ecf0418ce1c21b007f8168ee1ad76d56c7e1e7bea5bd839a6b65b3d30ea76ae1",
+      "export_sha256": "ecf0418ce1c21b007f8168ee1ad76d56c7e1e7bea5bd839a6b65b3d30ea76ae1",
+      "local_paths_redacted": false
+    },
+    {
+      "source": "outputs/training_measurement_20261107_054714.json",
+      "export": "results/training_measurement_20261107_054714.json",
+      "source_bytes": 11476,
+      "export_bytes": 10895,
+      "source_sha256": "753707a9bcd9cc85f55dfbdd4796c791d43d3dec76362ee8cb8c59cf37b374b2",
+      "export_sha256": "a1a8641e8aebc3c9b2235bc3a18db308d428c120c5b5aeb2879b92ace716d2ed",
+      "local_paths_redacted": true
+    },
+    {
+      "source": "outputs/vram_probe_b2_20261107_054714/gpu_samples.csv",
+      "export": "results/vram_probe_b2_20261107_054714/gpu_samples.csv",
+      "source_bytes": 458,
+      "export_bytes": 458,
+      "source_sha256": "0742d116bce0570b8c58719f12574b0ef4bbe7469a76e15b8903db8d3ccc64b9",
+      "export_sha256": "0742d116bce0570b8c58719f12574b0ef4bbe7469a76e15b8903db8d3ccc64b9",
+      "local_paths_redacted": false
+    },
+    {
+      "source": "outputs/vram_probe_b2_20261107_054714/monitor_report.json",
+      "export": "results/vram_probe_b2_20261107_054714/monitor_report.json",
+      "source_bytes": 3282,
+      "export_bytes": 3115,
+      "source_sha256": "04b2babea6f26e2e6cff045dd224f2d1bd01e9a6617174fc71118dc58eb516ad",
+      "export_sha256": "bf30b1a6b2340c7a27d07d80f8b30504809ba508eccef64b637dd5c49d0b7b29",
+      "local_paths_redacted": true
+    },
+    {
+      "source": "outputs/vram_probe_b2_20261107_054714/training.log",
+      "export": "results/vram_probe_b2_20261107_054714/training.log",
+      "source_bytes": 431,
+      "export_bytes": 386,
+      "source_sha256": "1efbee19db3ae4ed2cd2552345aca4f622640b706776fab2b1252554041a291f",
+      "export_sha256": "fd744206e607a026597fb5d833622fe52c08b04fa73d274c196e8fef1023bd6f",
+      "local_paths_redacted": true
+    },
+    {
+      "source": "outputs/vram_probe_b2_20261107_054714/training_profile.json",
+      "export": "results/vram_probe_b2_20261107_054714/training_profile.json",
+      "source_bytes": 1940,
+      "export_bytes": 1874,
+      "source_sha256": "89b754f267e4de871497036286f4364d7936213956dca1bca48554fe229e242e",
+      "export_sha256": "e16af851008c440295114eb0dcc2c4eb14f08af4928bd560b9cc9fe33e3512f3",
+      "local_paths_redacted": false
+    },
+    {
+      "source": "outputs/vram_probe_b2_20261107_054714/training_steps.csv",
+      "export": "results/vram_probe_b2_20261107_054714/training_steps.csv",
+      "source_bytes": 2452,
+      "export_bytes": 2452,
+      "source_sha256": "08b3143ad914db4ef8ff0b7da092e9c740f0de00b9b7bac5e14718c66a679b42",
+      "export_sha256": "08b3143ad914db4ef8ff0b7da092e9c740f0de00b9b7bac5e14718c66a679b42",
+      "local_paths_redacted": false
+    },
+    {
+      "source": "outputs/vram_probe_b4_20261107_054714/gpu_samples.csv",
+      "export": "results/vram_probe_b4_20261107_054714/gpu_samples.csv",
+      "source_bytes": 528,
+      "export_bytes": 528,
+      "source_sha256": "358d6781d610774c3bfcce2b3074b6ad5153a667b4fb4e8f585e9790a9330516",
+      "export_sha256": "358d6781d610774c3bfcce2b3074b6ad5153a667b4fb4e8f585e9790a9330516",
+      "local_paths_redacted": false
+    },
+    {
+      "source": "outputs/vram_probe_b4_20261107_054714/monitor_report.json",
+      "export": "results/vram_probe_b4_20261107_054714/monitor_report.json",
+      "source_bytes": 3292,
+      "export_bytes": 3125,
+      "source_sha256": "4ccae7382c2312c1f6820f37703322e02eb18da6e6c93f7a56a48a27178f7df6",
+      "export_sha256": "0260e28b7dfc7d0403c92e020c33eeb00d7eb019d00ad667acba844453cdaa50",
+      "local_paths_redacted": true
+    },
+    {
+      "source": "outputs/vram_probe_b4_20261107_054714/training.log",
+      "export": "results/vram_probe_b4_20261107_054714/training.log",
+      "source_bytes": 431,
+      "export_bytes": 386,
+      "source_sha256": "37b6532beff2d0d824bb31693cb8729027d7801c66a6a38979670dd259371c14",
+      "export_sha256": "d8968c95208e58c724c1160fafebc7a0d62d684b75b00acc3e3d818b3cd36bfc",
+      "local_paths_redacted": true
+    },
+    {
+      "source": "outputs/vram_probe_b4_20261107_054714/training_profile.json",
+      "export": "results/vram_probe_b4_20261107_054714/training_profile.json",
+      "source_bytes": 1950,
+      "export_bytes": 1884,
+      "source_sha256": "4d8bfe468a20a01cfdae2525c2e9bc59a3213d7366524d1e8636342aac8d3e4b",
+      "export_sha256": "5508570ba16a969b719597b8ebedccb5b8d20de85067933492ac857e193f1a50",
+      "local_paths_redacted": false
+    },
+    {
+      "source": "outputs/vram_probe_b4_20261107_054714/training_steps.csv",
+      "export": "results/vram_probe_b4_20261107_054714/training_steps.csv",
+      "source_bytes": 2438,
+      "export_bytes": 2438,
+      "source_sha256": "a8b32eb0baffda85fe29e13ece36b48ed0bcf9ef3f922565ff0203d17c5eae7a",
+      "export_sha256": "a8b32eb0baffda85fe29e13ece36b48ed0bcf9ef3f922565ff0203d17c5eae7a",
+      "local_paths_redacted": false
+    }
+  ],
+  "publication_changes": [
+    {
+      "file": "tests/test_training_resume.py",
+      "change": "Create outputs/ before creating temporary test directories so the suite works in a fresh clone."
+    }
+  ],
+  "generated_validation_artifacts": [
+    {
+      "path": "results/validation/cpu_resume_tests.json",
+      "bytes": 810,
+      "sha256": "8bb2639927c51cdf42b92df5fc9fc136cce5f7fc66e99ffe24b20978555559c6"
+    },
+    {
+      "path": "results/validation/cpu_resume_tests.log",
+      "bytes": 4635,
+      "sha256": "c44f3dd7eca590b6524164f8f136210d87f65031f9d7b8328b32abd5421ccab1"
+    }
+  ]
+}
