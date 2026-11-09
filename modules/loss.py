@@ -1,3 +1,4 @@
+import math
 import torch.nn as nn
 import torch
 import torch.nn.functional as F
@@ -25,6 +26,27 @@ class CLIPLoss(nn.Module):
         v2t_loss = -v2t_neg_ce.mean()
 
         return (t2v_loss + v2t_loss) / 2.0
+
+
+class MarginCLIPLoss(CLIPLoss):
+    """Symmetric CLIP loss with a fixed additive cosine margin on positives.
+
+    Training only: retrieval still ranks the unmodified cosine similarities.
+    A zero margin delegates to the original implementation exactly.
+    """
+    def __init__(self, margin=0.02):
+        super().__init__()
+        if not math.isfinite(margin) or not 0 <= margin < 1:
+            raise ValueError('margin must be finite and in [0, 1)')
+        self.margin = float(margin)
+
+    def forward(self, sims, logit_scale):
+        if sims.ndim != 2 or sims.shape[0] != sims.shape[1] or sims.shape[0] == 0:
+            raise ValueError('One positive per row/column requires a nonempty square matrix')
+        if self.margin == 0:
+            return super().forward(sims, logit_scale)
+        diagonal = torch.eye(sims.shape[0], device=sims.device, dtype=sims.dtype)
+        return super().forward(sims - self.margin * diagonal, logit_scale)
 
 
 class LossFactory:

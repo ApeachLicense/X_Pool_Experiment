@@ -1,0 +1,27 @@
+{
+  "recorded_at_utc": "2026-11-09T08:49:50.515101+00:00",
+  "command": [
+    "python",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "tests",
+    "-p",
+    "test_margin_pilot.py",
+    "-v"
+  ],
+  "cuda_visible_devices": "-1",
+  "test_count": 5,
+  "passed": 5,
+  "exit_code": 0,
+  "suite_seconds": 0.258,
+  "record_source": "Completed unittest invocation before training; recorded from the returned test output.",
+  "coverage": [
+    "zero margin exactly preserves original loss and gradients",
+    "positive margin increases training pressure for confusing examples without mutating inputs",
+    "invalid margins and non-square correspondence rejected",
+    "deterministic, video-disjoint complete internal split",
+    "three persistent training chunks match continuous model, optimizer, and scheduler"
+  ]
+}

@@ -1,0 +1,83 @@
+{
+  "created_before_training_at_utc": "2026-11-09T08:49:49.734926+00:00",
+  "base_repository_commit": "144fb325c0c93182c5e74450ba18c94e048ca29b",
+  "hypothesis": "A fixed additive positive cosine margin may help separate confusing retrieval candidates. This is a pilot, not an expected improvement guarantee.",
+  "margin_formula": "L = original symmetric CLIPLoss(S - m*I, logit_scale), m=0 baseline or m=0.02 candidate; inference uses unchanged cosine scores.",
+  "initialization": "Base openai/clip-vit-base-patch32 + original fresh X-Pool pooling; no prior MSR-VTT full-9K checkpoint is loaded.",
+  "base_clip_sha256": "a63082132ba4f97a80bea76823f544493bffa8082296d62d71581a4feff1576f",
+  "split": {
+    "parent_videos": 9000,
+    "training_videos": 8000,
+    "training_caption_pairs": 160000,
+    "validation_videos_and_queries": 1000,
+    "seed": 24,
+    "video_selection": "Lowest SHA256(split|24|video_id) values, 1000 videos",
+    "validation_caption_selection": "SHA256(caption|24|video_id) modulo that video caption count; one caption per video",
+    "train_video_ids_sha256": "13b8353f85c459ef1753184acc7f180c5e4eee53e777a96a71f5d7e46b10d3a3",
+    "validation_csv_sha256": "4c180f0a090f2311ffd93a9f8c04a3d9a87dc486f2a0fd2ac46951ba2097b1c4",
+    "annotation_sha256": "3540d91f9fd5f9a56d75b00c6576f30814fd19395d027791a6d438e9dc297014",
+    "official_1ka_excluded": true
+  },
+  "training": {
+    "seeds": [
+      24,
+      25
+    ],
+    "steps_per_arm": 3000,
+    "batch_size": 4,
+    "precision": "float32",
+    "num_frames": 12,
+    "input_resolution": 224,
+    "clip_lr": 1e-06,
+    "pooling_lr": 3e-05,
+    "weight_decay": 0.2,
+    "warmup_steps": 300,
+    "scheduler": "cosine to zero at 3000 updates",
+    "transformer_dropout": 0.3,
+    "workers": 2,
+    "all_clip_and_pooling_parameters_trainable": true,
+    "amp": false,
+    "gradient_accumulation": false
+  },
+  "evaluation": {
+    "steps": [
+      0,
+      1000,
+      2000,
+      3000
+    ],
+    "protocol": "Internal holdout 1000 videos / one query each / text-to-video; not official 1K-A",
+    "ranking": "Original t2v_metrics, unmodified cosine scores",
+    "validation_loss": "Original margin-free CLIPLoss with evaluation batch size 4"
+  },
+  "primary_endpoint": "Paired R@1 difference at the fixed final 3000 updates for each seed. Best-validation checkpoint is secondary only.",
+  "screening_rule": "Consider further study only if both seed differences are positive and their mean is at least +1.0 percentage point, with no memory failures. This is a practical screening threshold, not statistical significance.",
+  "fixed_arm_order": [
+    {
+      "name": "seed24_baseline",
+      "seed": 24,
+      "margin": 0.0
+    },
+    {
+      "name": "seed24_margin002",
+      "seed": 24,
+      "margin": 0.02
+    },
+    {
+      "name": "seed25_margin002",
+      "seed": 25,
+      "margin": 0.02
+    },
+    {
+      "name": "seed25_baseline",
+      "seed": 25,
+      "margin": 0.0
+    }
+  ],
+  "matching": "Same initialization, pair order, augmentation seeds, optimizer and update/evaluation budgets within each seed. Record pair-order hashes and first three input hashes.",
+  "limitations": [
+    "Short full-model pilot: 12000 pair exposures per arm, 7.5% of one 160000-pair training epoch.",
+    "Two seeds and one internal split do not establish generalization or publication-level significance.",
+    "The hypothesis follows earlier official-test error inspection; this internal validation is exploratory. Official 1K-A is not evaluated or used for choosing settings in this pilot."
+  ]
+}
