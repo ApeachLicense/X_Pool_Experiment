@@ -1,0 +1,27 @@
+{
+  "verified": true,
+  "completed_at_utc": "2026-11-09T08:31:39.650429+00:00",
+  "evaluated_models": 7,
+  "query_rows_checked": 7000,
+  "all_query_ids_aligned": true,
+  "recall_and_rank_metrics_recomputed": true,
+  "known_official_and_final_metrics_unchanged": true,
+  "attention_axes_and_probability_checks": true,
+  "ground_truth_score_ties": 0,
+  "cpu_analysis_tests_passed": 3,
+  "gpu_process_exit_codes": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "telemetry_errors": [],
+  "total_evaluation_process_seconds": 1025.796,
+  "illustrative_cases_visually_inspected": 7,
+  "actual_evaluation_crop_inspected": true,
+  "dataset_media_exported": false,
+  "evaluation_script_snapshot_sha256": "80b2fcce5a14f798caaff2559bd8ca2f2cd0acd03d7a06f8815e66a145418659"
+}

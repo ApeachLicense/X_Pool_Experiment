@@ -1,0 +1,36 @@
+{
+  "label": "official",
+  "protocol": "MSR-VTT 1K-A, 1000 unique videos, one query per video, text-to-video",
+  "checkpoint": "outputs/msrvtt9k/model_best.pth",
+  "checkpoint_sha256": "eda4155b92d6766d7d8a44012b45c9fa49603e7682569db36b6bbc895685df0e",
+  "checkpoint_metadata": {
+    "epoch": null,
+    "global_step": null,
+    "partial_epoch": null,
+    "legacy_transition_step": null
+  },
+  "metrics": {
+    "R1": 46.9,
+    "R5": 72.8,
+    "R10": 82.2,
+    "R50": 95.3,
+    "R100": 97.6,
+    "MedR": 2.0,
+    "MeanR": 14.291
+  },
+  "queries": 1000,
+  "gt_ties_exceeding_one": 0,
+  "batch_size": 4,
+  "num_workers": 2,
+  "num_frames": 12,
+  "seed": 24,
+  "started_at_utc": "2026-11-09T08:03:02.350310+00:00",
+  "completed_at_utc": "2026-11-09T08:05:27.211952+00:00",
+  "wall_time_seconds": 144.853,
+  "official_test_py_sha256": "1dbae8130daea1ecb7385985f9ae41931d701de4807492a524fdaf1005746f73",
+  "analysis_script_sha256": "80b2fcce5a14f798caaff2559bd8ca2f2cd0acd03d7a06f8815e66a145418659",
+  "evaluation_split_sha256": "ec4553aa3999fc0a106e5a019296bbaaecc358f55ecc05c7f6d0e2d7b04a69ac",
+  "ranking": "Unchanged official t2v_metrics; descending torch.argsort followed by inverse argsort; ranks exported as 1-based.",
+  "attention": "Original final pooling softmax output [video, head, frame, query]; frame weights averaged across heads for the ground-truth and retrieved top-1 video. No attention forward computation is substituted.",
+  "exit_code": 0
+}

@@ -1,0 +1,87 @@
+{
+  "status": "finished",
+  "started_at_utc": "2026-11-09T07:55:40.734552+00:00",
+  "evaluations": [
+    {
+      "label": "epoch2",
+      "exit_code": 0,
+      "process_seconds": 147.674,
+      "gpu_peak_used_mib": 2571.0,
+      "telemetry_errors": [],
+      "metrics": {
+        "R1": 36.7,
+        "R5": 62.6,
+        "R10": 75.9,
+        "R50": 93.2,
+        "R100": 96.3,
+        "MedR": 3.0,
+        "MeanR": 16.852
+      }
+    },
+    {
+      "label": "epoch3",
+      "exit_code": 0,
+      "process_seconds": 145.998,
+      "gpu_peak_used_mib": 2574.0,
+      "telemetry_errors": [],
+      "metrics": {
+        "R1": 38.4,
+        "R5": 66.4,
+        "R10": 77.1,
+        "R50": 94.2,
+        "R100": 96.9,
+        "MedR": 2.0,
+        "MeanR": 15.601
+      }
+    },
+    {
+      "label": "epoch4",
+      "exit_code": 0,
+      "process_seconds": 146.472,
+      "gpu_peak_used_mib": 2568.0,
+      "telemetry_errors": [],
+      "metrics": {
+        "R1": 40.3,
+        "R5": 68.0,
+        "R10": 77.7,
+        "R50": 94.7,
+        "R100": 97.4,
+        "MedR": 2.0,
+        "MeanR": 14.264
+      }
+    },
+    {
+      "label": "official",
+      "exit_code": 0,
+      "process_seconds": 146.743,
+      "gpu_peak_used_mib": 2568.0,
+      "telemetry_errors": [],
+      "metrics": {
+        "R1": 46.9,
+        "R5": 72.8,
+        "R10": 82.2,
+        "R50": 95.3,
+        "R100": 97.6,
+        "MedR": 2.0,
+        "MeanR": 14.291
+      }
+    },
+    {
+      "label": "epoch5",
+      "exit_code": 0,
+      "process_seconds": 146.098,
+      "gpu_peak_used_mib": 2566.0,
+      "telemetry_errors": [],
+      "metrics": {
+        "R1": 39.9,
+        "R5": 67.7,
+        "R10": 77.7,
+        "R50": 94.7,
+        "R100": 97.4,
+        "MedR": 2.0,
+        "MeanR": 14.002
+      }
+    }
+  ],
+  "completed_at_utc": "2026-11-09T08:07:53.814831+00:00"
+}

@@ -1,0 +1,276 @@
+"""Evaluate existing checkpoints through test.py and retain query-level evidence.
+
+No model forward or ranking rule is replaced. The softmax observer retains the
+already-computed final cross-attention tensor and returns its original output.
+"""
+
+import argparse
+import csv
+import ctypes
+from datetime import datetime, timezone
+import hashlib
+import json
+import math
+import os
+from pathlib import Path
+import runpy
+import subprocess
+import sys
+import threading
+import time
+
+
+ROOT = Path(__file__).resolve().parent
+
+
+def write_json(path, value):
+    path.write_text(json.dumps(value, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+
+
+def sha256(path):
+    result = hashlib.sha256()
+    with path.open('rb') as handle:
+        for block in iter(lambda: handle.read(8 * 1024 * 1024), b''):
+            result.update(block)
+    return result.hexdigest()
+
+
+def query_records(scores, queries, attention):
+    """Use the same descending double-argsort convention as t2v_metrics."""
+    import torch
+
+    count = len(queries)
+    assert scores.shape == (count, count)
+    assert attention.shape[0] == attention.shape[3] == count
+    assert bool(torch.isfinite(scores).all())
+    assert bool(torch.isfinite(attention).all())
+    assert torch.allclose(attention.sum(dim=2), torch.ones_like(attention.sum(dim=2)), atol=1e-5)
+    order = torch.argsort(scores, dim=-1, descending=True)
+    inverse = torch.argsort(order, dim=-1, descending=False)
+    ranks = torch.diag(inverse) + 1
+    idx = torch.arange(count)
+    gt_attention = attention[idx, :, :, idx].mean(dim=1)
+    top_attention = attention[order[:, 0], :, :, idx].mean(dim=1)
+    result = []
+    for i, query in enumerate(queries):
+        top = order[i, :min(10, count)].tolist()
+        record = {
+            'query_index': i, 'video_id': query['video_id'], 'caption': query['sentence'],
+            'rank': int(ranks[i]), 'gt_score': float(scores[i, i]),
+            'top1_video_id': queries[top[0]]['video_id'],
+            'top1_caption': queries[top[0]]['sentence'],
+            'top1_score': float(scores[i, top[0]]),
+            'gt_minus_top1': float(scores[i, i] - scores[i, top[0]]),
+            'top10_video_ids': json.dumps([queries[j]['video_id'] for j in top]),
+            'top10_scores': json.dumps([float(scores[i, j]) for j in top]),
+            'gt_score_ties': int((scores[i] == scores[i, i]).sum()),
+        }
+        for name, weights in [('gt', gt_attention[i]), ('top1', top_attention[i])]:
+            entropy = -(weights * weights.clamp_min(1e-30).log()).sum() / math.log(weights.numel())
+            record[name + '_attention'] = json.dumps(weights.tolist())
+            record[name + '_attention_entropy'] = float(entropy)
+            record[name + '_attention_peak'] = float(weights.max())
+            record[name + '_attention_argmax'] = int(weights.argmax())
+        result.append(record)
+    return result
+
+
+def evaluate(args):
+    import torch
+    import torch.nn.functional as functional
+    import modules.metrics as metric_module
+
+    source = args.source_root.resolve()
+    output = args.results_dir.resolve() / args.label
+    output.mkdir(parents=True, exist_ok=True)
+    os.chdir(source)
+    checkpoint = source / 'outputs' / args.experiment / (
+        'model_best.pth' if args.epoch < 0 else f'checkpoint-epoch{args.epoch}.pth'
+    )
+    assert checkpoint.is_file(), checkpoint
+    with Path('data/MSRVTT/MSRVTT_JSFUSION_test.csv').open(encoding='utf-8', newline='') as handle:
+        queries = list(csv.DictReader(handle))
+    count = len(queries)
+    assert count == 1000 and len({q['video_id'] for q in queries}) == count
+
+    captured = {}
+    original_softmax = functional.softmax
+    original_metrics = metric_module.t2v_metrics
+    original_load = torch.load
+
+    def observe_softmax(inputs, dim=None, _stacklevel=3, dtype=None):
+        result = original_softmax(inputs, dim=dim, _stacklevel=_stacklevel, dtype=dtype)
+        if dim == 2 and inputs.ndim == 4 and inputs.shape[0] == inputs.shape[3] == count and inputs.shape[2] == 12:
+            assert 'attention' not in captured, 'Unexpected repeated full evaluation pooling'
+            captured['attention'] = result.detach().cpu()
+        return result
+
+    def observe_load(filename, *values, **options):
+        result = original_load(filename, *values, **options)
+        if isinstance(filename, (str, os.PathLike)) and Path(filename).resolve() == checkpoint:
+            captured['checkpoint_metadata'] = {
+                key: result.get(key) for key in ('epoch', 'global_step', 'partial_epoch', 'legacy_transition_step')
+            }
+            if 'data_state' in result:
+                captured['checkpoint_metadata']['data_state'] = {
+                    k: result['data_state'][k] for k in ('epoch', 'next_batch', 'dataset_size', 'batch_size', 'seed')
+                }
+        return result
+
+    def observe_metrics(sims):
+        result = original_metrics(sims)
+        assert sims.shape == (count, 1, count), tuple(sims.shape)
+        records = query_records(sims[:, 0, :].cpu(), queries, captured.pop('attention'))
+        for k, threshold in [('R1', 1), ('R5', 5), ('R10', 10)]:
+            assert abs(result[k] - 100 * sum(r['rank'] <= threshold for r in records) / count) < 1e-9
+        if args.expected_r1 is not None:
+            assert abs(result['R1'] - args.expected_r1) < 1e-9, (args.label, result)
+        with (output / 'queries.csv').open('w', encoding='utf-8', newline='') as handle:
+            writer = csv.DictWriter(handle, fieldnames=list(records[0]))
+            writer.writeheader()
+            writer.writerows(records)
+        captured['metrics'] = {k: float(v) for k, v in result.items()}
+        captured['queries'] = len(records)
+        captured['gt_ties_exceeding_one'] = sum(r['gt_score_ties'] > 1 for r in records)
+        return result
+
+    started = datetime.now(timezone.utc).isoformat()
+    clock = time.perf_counter()
+    functional.softmax = observe_softmax
+    metric_module.t2v_metrics = observe_metrics
+    torch.load = observe_load
+    sys.argv = [
+        'test.py', f'--exp_name={args.experiment}', f'--output_dir={source / "outputs"}',
+        '--videos_dir=data/MSRVTT/vids', '--batch_size=4', '--num_workers=2',
+        '--huggingface', f'--load_epoch={args.epoch}', '--dataset_name=MSRVTT',
+        '--msrvtt_train_file=9k', '--no_tensorboard',
+        f'--tb_log_dir={ROOT / ".cache" / "analysis_logs" / args.label}',
+    ]
+    try:
+        runpy.run_path(str(ROOT / 'test.py'), run_name='__main__')
+    finally:
+        functional.softmax = original_softmax
+        metric_module.t2v_metrics = original_metrics
+        torch.load = original_load
+    assert 'metrics' in captured and 'checkpoint_metadata' in captured
+    report = {
+        'label': args.label, 'protocol': 'MSR-VTT 1K-A, 1000 unique videos, one query per video, text-to-video',
+        'checkpoint': f'outputs/{args.experiment}/{checkpoint.name}', 'checkpoint_sha256': sha256(checkpoint),
+        'checkpoint_metadata': captured['checkpoint_metadata'], 'metrics': captured['metrics'],
+        'queries': captured['queries'], 'gt_ties_exceeding_one': captured['gt_ties_exceeding_one'],
+        'batch_size': 4, 'num_workers': 2, 'num_frames': 12, 'seed': 24,
+        'started_at_utc': started, 'completed_at_utc': datetime.now(timezone.utc).isoformat(),
+        'wall_time_seconds': round(time.perf_counter() - clock, 3),
+        'official_test_py_sha256': sha256(ROOT / 'test.py'),
+        'analysis_script_sha256': sha256(Path(__file__)),
+        'evaluation_split_sha256': sha256(Path('data/MSRVTT/MSRVTT_JSFUSION_test.csv')),
+        'ranking': 'Unchanged official t2v_metrics; descending torch.argsort followed by inverse argsort; ranks exported as 1-based.',
+        'attention': 'Original final pooling softmax output [video, head, frame, query]; frame weights averaged across heads for the ground-truth and retrieved top-1 video. No attention forward computation is substituted.',
+        'exit_code': 0,
+    }
+    write_json(output / 'evaluation.json', report)
+    print(json.dumps(report, ensure_ascii=True, indent=2), flush=True)
+
+
+def run(args):
+    source = args.source_root.resolve()
+    output = args.results_dir.resolve()
+    output.mkdir(parents=True, exist_ok=True)
+    jobs = [
+        ('epoch2', 'msrvtt9k_split_training', 2, None),
+        ('epoch3', 'msrvtt9k_split_training', 3, None),
+        ('epoch4', 'msrvtt9k_split_training', 4, None),
+        ('official', 'msrvtt9k', -1, 46.9),
+        ('epoch5', 'msrvtt9k_split_training', 5, 39.9),
+    ]
+    report = {'status': 'running', 'started_at_utc': datetime.now(timezone.utc).isoformat(), 'evaluations': []}
+    write_json(output / 'run_summary.json', report)
+    if os.name == 'nt':
+        ctypes.windll.kernel32.SetThreadExecutionState(0x80000001)
+    try:
+        for label, experiment, epoch, expected in jobs:
+            directory = output / label
+            directory.mkdir(exist_ok=True)
+            if (directory / 'evaluation.json').exists():
+                raise FileExistsError(f'Results already exist: {directory}')
+            command = [sys.executable, '-u', str(Path(__file__).resolve()), 'evaluate',
+                       '--source-root', str(source), '--results-dir', str(output),
+                       '--label', label, '--experiment', experiment, '--epoch', str(epoch)]
+            if expected is not None:
+                command.extend(['--expected-r1', str(expected)])
+            print(f'Evaluating {label}', flush=True)
+            stop = threading.Event()
+            samples = []
+            errors = []
+
+            def monitor():
+                while not stop.is_set():
+                    try:
+                        result = subprocess.run(
+                            ['nvidia-smi', '--id=0', '--query-gpu=memory.used,utilization.gpu,temperature.gpu', '--format=csv,noheader,nounits'],
+                            capture_output=True, text=True, check=True, timeout=10,
+                        )
+                        memory, utilization, temperature = [float(x.strip()) for x in result.stdout.strip().split(',')]
+                        samples.append([datetime.now(timezone.utc).isoformat(), memory, utilization, temperature])
+                    except Exception as error:
+                        errors.append(type(error).__name__)
+                    stop.wait(2)
+
+            thread = threading.Thread(target=monitor, daemon=True)
+            thread.start()
+            clock = time.perf_counter()
+            env = dict(os.environ, PYTHONUTF8='1', TOKENIZERS_PARALLELISM='false', HF_HUB_OFFLINE='1', TRANSFORMERS_OFFLINE='1')
+            try:
+                result = subprocess.run(command, cwd=source, env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+                                        text=True, encoding='utf-8', errors='replace')
+            finally:
+                stop.set()
+                thread.join(timeout=12)
+            log = result.stdout
+            for prefix, replacement in [(str(source), '<experiment-root>'), (str(ROOT), '<repo>'), (str(Path.home()), '<user-home>')]:
+                for variant in (prefix, json.dumps(prefix, ensure_ascii=True)[1:-1], json.dumps(prefix, ensure_ascii=False)[1:-1]):
+                    log = log.replace(variant, replacement)
+            (directory / 'evaluation.log').write_text(log, encoding='utf-8')
+            with (directory / 'gpu_samples.csv').open('w', newline='', encoding='utf-8') as handle:
+                writer = csv.writer(handle)
+                writer.writerow(['utc_time', 'device_used_mib', 'gpu_utilization_percent', 'temperature_c'])
+                writer.writerows(samples)
+            item = {'label': label, 'exit_code': result.returncode, 'process_seconds': round(time.perf_counter() - clock, 3),
+                    'gpu_peak_used_mib': max((x[1] for x in samples), default=None), 'telemetry_errors': errors}
+            if result.returncode == 0:
+                item['metrics'] = json.loads((directory / 'evaluation.json').read_text(encoding='utf-8'))['metrics']
+            report['evaluations'].append(item)
+            write_json(output / 'run_summary.json', report)
+            print(json.dumps(item), flush=True)
+            if result.returncode:
+                raise RuntimeError(f'{label} failed; inspect {directory / "evaluation.log"}')
+        report['status'] = 'finished'
+        report['completed_at_utc'] = datetime.now(timezone.utc).isoformat()
+        write_json(output / 'run_summary.json', report)
+    except BaseException as error:
+        report['status'] = 'failed'
+        report['error'] = type(error).__name__
+        write_json(output / 'run_summary.json', report)
+        raise
+    finally:
+        if os.name == 'nt':
+            ctypes.windll.kernel32.SetThreadExecutionState(0x80000000)
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('mode', choices=['run', 'evaluate'])
+    parser.add_argument('--source-root', type=Path, required=True, help='Existing experiment checkout containing videos, local CLIP assets and outputs')
+    parser.add_argument('--results-dir', type=Path, default=ROOT / 'results/checkpoint_analysis_20261109')
+    parser.add_argument('--label')
+    parser.add_argument('--experiment')
+    parser.add_argument('--epoch', type=int)
+    parser.add_argument('--expected-r1', type=float)
+    args = parser.parse_args()
+    if args.mode == 'evaluate' and (not args.label or not args.experiment or args.epoch is None):
+        parser.error('evaluate requires --label, --experiment and --epoch')
+    (run if args.mode == 'run' else evaluate)(args)
+
+
+if __name__ == '__main__':
+    main()

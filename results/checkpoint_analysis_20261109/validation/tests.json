@@ -1,0 +1,7 @@
+{
+  "completed_at_utc": "2026-11-09T08:28:33.511990+00:00",
+  "exit_code": 0,
+  "seconds": 1.583,
+  "test_count": 3,
+  "tests": "query/video/attention axes, official rank convention, tie handling, normalized entropy, and preserving existing analysis records before inference; CUDA_VISIBLE_DEVICES=-1"
+}

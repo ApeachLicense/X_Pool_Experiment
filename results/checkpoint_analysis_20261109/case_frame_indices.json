@@ -1,0 +1,523 @@
+[
+  {
+    "case_id": 1,
+    "video_id": "video7558",
+    "roles": [
+      "ground truth",
+      "official top-1"
+    ],
+    "all_sampled_frame_indices": [
+      37,
+      112,
+      187,
+      262,
+      337,
+      412,
+      487,
+      562,
+      637,
+      712,
+      787,
+      862
+    ],
+    "displayed_positions_1based": [
+      1,
+      3,
+      5,
+      7,
+      9,
+      12
+    ],
+    "display_transform": "Original clip_test resize + 224x224 center crop; CLIP normalization inverted for display."
+  },
+  {
+    "case_id": 1,
+    "video_id": "video8496",
+    "roles": [
+      "epoch4 top-1"
+    ],
+    "all_sampled_frame_indices": [
+      25,
+      78,
+      130,
+      183,
+      235,
+      288,
+      340,
+      393,
+      445,
+      498,
+      550,
+      603
+    ],
+    "displayed_positions_1based": [
+      1,
+      3,
+      5,
+      7,
+      9,
+      12
+    ],
+    "display_transform": "Original clip_test resize + 224x224 center crop; CLIP normalization inverted for display."
+  },
+  {
+    "case_id": 1,
+    "video_id": "video8683",
+    "roles": [
+      "epoch5 top-1"
+    ],
+    "all_sampled_frame_indices": [
+      12,
+      37,
+      62,
+      87,
+      112,
+      137,
+      162,
+      187,
+      212,
+      237,
+      262,
+      287
+    ],
+    "displayed_positions_1based": [
+      1,
+      3,
+      5,
+      7,
+      9,
+      12
+    ],
+    "display_transform": "Original clip_test resize + 224x224 center crop; CLIP normalization inverted for display."
+  },
+  {
+    "case_id": 2,
+    "video_id": "video9347",
+    "roles": [
+      "ground truth",
+      "official top-1"
+    ],
+    "all_sampled_frame_indices": [
+      12,
+      38,
+      64,
+      90,
+      116,
+      142,
+      168,
+      194,
+      220,
+      246,
+      272,
+      298
+    ],
+    "displayed_positions_1based": [
+      1,
+      3,
+      5,
+      7,
+      9,
+      12
+    ],
+    "display_transform": "Original clip_test resize + 224x224 center crop; CLIP normalization inverted for display."
+  },
+  {
+    "case_id": 2,
+    "video_id": "video7549",
+    "roles": [
+      "epoch4 top-1",
+      "epoch5 top-1"
+    ],
+    "all_sampled_frame_indices": [
+      28,
+      86,
+      144,
+      202,
+      260,
+      318,
+      376,
+      434,
+      492,
+      550,
+      608,
+      666
+    ],
+    "displayed_positions_1based": [
+      1,
+      3,
+      5,
+      7,
+      9,
+      12
+    ],
+    "display_transform": "Original clip_test resize + 224x224 center crop; CLIP normalization inverted for display."
+  },
+  {
+    "case_id": 3,
+    "video_id": "video9017",
+    "roles": [
+      "ground truth",
+      "official top-1"
+    ],
+    "all_sampled_frame_indices": [
+      14,
+      44,
+      74,
+      104,
+      134,
+      164,
+      194,
+      224,
+      254,
+      284,
+      314,
+      344
+    ],
+    "displayed_positions_1based": [
+      1,
+      3,
+      5,
+      7,
+      9,
+      12
+    ],
+    "display_transform": "Original clip_test resize + 224x224 center crop; CLIP normalization inverted for display."
+  },
+  {
+    "case_id": 3,
+    "video_id": "video8657",
+    "roles": [
+      "epoch4 top-1",
+      "epoch5 top-1"
+    ],
+    "all_sampled_frame_indices": [
+      14,
+      44,
+      74,
+      104,
+      134,
+      164,
+      194,
+      224,
+      254,
+      284,
+      314,
+      344
+    ],
+    "displayed_positions_1based": [
+      1,
+      3,
+      5,
+      7,
+      9,
+      12
+    ],
+    "display_transform": "Original clip_test resize + 224x224 center crop; CLIP normalization inverted for display."
+  },
+  {
+    "case_id": 4,
+    "video_id": "video7351",
+    "roles": [
+      "ground truth",
+      "epoch4 top-1"
+    ],
+    "all_sampled_frame_indices": [
+      12,
+      37,
+      62,
+      87,
+      112,
+      137,
+      162,
+      187,
+      212,
+      237,
+      262,
+      287
+    ],
+    "displayed_positions_1based": [
+      1,
+      3,
+      5,
+      7,
+      9,
+      12
+    ],
+    "display_transform": "Original clip_test resize + 224x224 center crop; CLIP normalization inverted for display."
+  },
+  {
+    "case_id": 4,
+    "video_id": "video7755",
+    "roles": [
+      "official top-1"
+    ],
+    "all_sampled_frame_indices": [
+      14,
+      44,
+      74,
+      104,
+      134,
+      164,
+      194,
+      224,
+      254,
+      284,
+      314,
+      344
+    ],
+    "displayed_positions_1based": [
+      1,
+      3,
+      5,
+      7,
+      9,
+      12
+    ],
+    "display_transform": "Original clip_test resize + 224x224 center crop; CLIP normalization inverted for display."
+  },
+  {
+    "case_id": 4,
+    "video_id": "video8301",
+    "roles": [
+      "epoch5 top-1"
+    ],
+    "all_sampled_frame_indices": [
+      12,
+      37,
+      62,
+      87,
+      112,
+      137,
+      162,
+      187,
+      212,
+      237,
+      262,
+      287
+    ],
+    "displayed_positions_1based": [
+      1,
+      3,
+      5,
+      7,
+      9,
+      12
+    ],
+    "display_transform": "Original clip_test resize + 224x224 center crop; CLIP normalization inverted for display."
+  },
+  {
+    "case_id": 5,
+    "video_id": "video8903",
+    "roles": [
+      "ground truth",
+      "epoch4 top-1"
+    ],
+    "all_sampled_frame_indices": [
+      13,
+      40,
+      67,
+      94,
+      121,
+      148,
+      175,
+      202,
+      229,
+      256,
+      283,
+      310
+    ],
+    "displayed_positions_1based": [
+      1,
+      3,
+      5,
+      7,
+      9,
+      12
+    ],
+    "display_transform": "Original clip_test resize + 224x224 center crop; CLIP normalization inverted for display."
+  },
+  {
+    "case_id": 5,
+    "video_id": "video8079",
+    "roles": [
+      "official top-1"
+    ],
+    "all_sampled_frame_indices": [
+      11,
+      36,
+      61,
+      86,
+      111,
+      136,
+      161,
+      186,
+      211,
+      236,
+      261,
+      286
+    ],
+    "displayed_positions_1based": [
+      1,
+      3,
+      5,
+      7,
+      9,
+      12
+    ],
+    "display_transform": "Original clip_test resize + 224x224 center crop; CLIP normalization inverted for display."
+  },
+  {
+    "case_id": 5,
+    "video_id": "video7355",
+    "roles": [
+      "epoch5 top-1"
+    ],
+    "all_sampled_frame_indices": [
+      15,
+      47,
+      79,
+      111,
+      143,
+      175,
+      207,
+      239,
+      271,
+      303,
+      335,
+      367
+    ],
+    "displayed_positions_1based": [
+      1,
+      3,
+      5,
+      7,
+      9,
+      12
+    ],
+    "display_transform": "Original clip_test resize + 224x224 center crop; CLIP normalization inverted for display."
+  },
+  {
+    "case_id": 6,
+    "video_id": "video7215",
+    "roles": [
+      "ground truth"
+    ],
+    "all_sampled_frame_indices": [
+      12,
+      37,
+      62,
+      87,
+      112,
+      137,
+      162,
+      187,
+      212,
+      237,
+      262,
+      287
+    ],
+    "displayed_positions_1based": [
+      1,
+      3,
+      5,
+      7,
+      9,
+      12
+    ],
+    "display_transform": "Original clip_test resize + 224x224 center crop; CLIP normalization inverted for display."
+  },
+  {
+    "case_id": 6,
+    "video_id": "video8313",
+    "roles": [
+      "official top-1"
+    ],
+    "all_sampled_frame_indices": [
+      15,
+      48,
+      80,
+      113,
+      145,
+      178,
+      210,
+      243,
+      275,
+      308,
+      340,
+      373
+    ],
+    "displayed_positions_1based": [
+      1,
+      3,
+      5,
+      7,
+      9,
+      12
+    ],
+    "display_transform": "Original clip_test resize + 224x224 center crop; CLIP normalization inverted for display."
+  },
+  {
+    "case_id": 6,
+    "video_id": "video7374",
+    "roles": [
+      "epoch4 top-1",
+      "epoch5 top-1"
+    ],
+    "all_sampled_frame_indices": [
+      24,
+      74,
+      124,
+      174,
+      224,
+      274,
+      324,
+      374,
+      424,
+      474,
+      524,
+      574
+    ],
+    "displayed_positions_1based": [
+      1,
+      3,
+      5,
+      7,
+      9,
+      12
+    ],
+    "display_transform": "Original clip_test resize + 224x224 center crop; CLIP normalization inverted for display."
+  },
+  {
+    "case_id": 7,
+    "video_id": "video9771",
+    "roles": [
+      "ground truth",
+      "official top-1",
+      "epoch4 top-1",
+      "epoch5 top-1"
+    ],
+    "all_sampled_frame_indices": [
+      16,
+      51,
+      86,
+      121,
+      156,
+      191,
+      226,
+      261,
+      296,
+      331,
+      366,
+      401
+    ],
+    "displayed_positions_1based": [
+      1,
+      3,
+      5,
+      7,
+      9,
+      12
+    ],
+    "display_transform": "Original clip_test resize + 224x224 center crop; CLIP normalization inverted for display."
+  }
+]

@@ -1,0 +1,43 @@
+{
+  "label": "epoch2",
+  "protocol": "MSR-VTT 1K-A, 1000 unique videos, one query per video, text-to-video",
+  "checkpoint": "outputs/msrvtt9k_split_training/checkpoint-epoch2.pth",
+  "checkpoint_sha256": "3a8d068e1ffec1f423747c10e5725fa8be4d6378a616d4eaee0d3feadd8d5254",
+  "checkpoint_metadata": {
+    "epoch": 2,
+    "global_step": 90000,
+    "partial_epoch": false,
+    "legacy_transition_step": 62216,
+    "data_state": {
+      "epoch": 2,
+      "next_batch": 45000,
+      "dataset_size": 180000,
+      "batch_size": 4,
+      "seed": 24
+    }
+  },
+  "metrics": {
+    "R1": 36.7,
+    "R5": 62.6,
+    "R10": 75.9,
+    "R50": 93.2,
+    "R100": 96.3,
+    "MedR": 3.0,
+    "MeanR": 16.852
+  },
+  "queries": 1000,
+  "gt_ties_exceeding_one": 0,
+  "batch_size": 4,
+  "num_workers": 2,
+  "num_frames": 12,
+  "seed": 24,
+  "started_at_utc": "2026-11-09T07:55:42.145963+00:00",
+  "completed_at_utc": "2026-11-09T07:58:07.932987+00:00",
+  "wall_time_seconds": 145.775,
+  "official_test_py_sha256": "1dbae8130daea1ecb7385985f9ae41931d701de4807492a524fdaf1005746f73",
+  "analysis_script_sha256": "80b2fcce5a14f798caaff2559bd8ca2f2cd0acd03d7a06f8815e66a145418659",
+  "evaluation_split_sha256": "ec4553aa3999fc0a106e5a019296bbaaecc358f55ecc05c7f6d0e2d7b04a69ac",
+  "ranking": "Unchanged official t2v_metrics; descending torch.argsort followed by inverse argsort; ranks exported as 1-based.",
+  "attention": "Original final pooling softmax output [video, head, frame, query]; frame weights averaged across heads for the ground-truth and retrieved top-1 video. No attention forward computation is substituted.",
+  "exit_code": 0
+}

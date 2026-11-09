@@ -1,0 +1,8 @@
+test_existing_run_report_is_preserved_before_evaluation (test_retrieval_analysis.RetrievalAnalysisTests) ... ok
+test_query_video_axes_and_rank_convention (test_retrieval_analysis.RetrievalAnalysisTests) ... ok
+test_ties_match_official_metric_and_attention_bounds (test_retrieval_analysis.RetrievalAnalysisTests) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.015s
+
+OK

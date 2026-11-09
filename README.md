@@ -4,14 +4,18 @@ RTX 3060 Ti 8GiB에서 X-Pool의 공식 평가 재현, VRAM 측정, 시간 제�
 
 **공식 체크포인트의 Recall@1 46.9%를 재현했고, 배치 4로 총 225,000 step의 학습 스케줄을 완료했습니다. 직접 학습한 최종 모델의 Recall@1은 39.9%입니다.** 두 결과는 학습 조건이 다르므로 구분해서 사용해야 합니다.
 
+후속 비교에서는 공식 모델, 기존 epoch 1·2·3·4·5, 초기 6시간 snapshot을 모두 평가했습니다. 이 1K-A 테스트셋에서 자체 모델의 가장 높은 R@1은 **epoch 4의 40.3%**였습니다. 공식 모델만 맞힌 질의 117개 중 100개는 epoch 4에서 정답이 2–5위로 밀렸습니다. [체크포인트 비교](results/checkpoint_analysis_20261109/metrics_summary.csv)와 [실패·회복 사례 7건](results/checkpoint_analysis_20261109/casebook.md)에 결과를 정리했습니다. 이 비교는 독립 검증셋에서 모델을 선택한 결과가 아닙니다.
+
 | MSR-VTT 1K-A, text-to-video | R@1 | R@5 | R@10 |
 | --- | ---: | ---: | ---: |
 | 공식 9K 체크포인트 평가 | 46.9% | 72.8% | 82.2% |
+| 직접 학습한 배치 4, epoch 4 | 40.3% | 68.0% | 77.7% |
 | 직접 학습한 배치 4 최종 모델 | 39.9% | 67.7% | 77.7% |
 
 학습 누적 시간은 약 **21시간 55분**, 장치 전체 VRAM 최대 사용량은 **6.59GiB**였으며 메모리 오류는 관측되지 않았습니다.
 
 - [상세 실험 보고서와 다음 실험 계획](report.md)
+- [체크포인트·질의별 후속 분석](results/checkpoint_analysis_20261109/README.md)
 - [최종 결과 JSON](results/msrvtt9k_split_training/completion_summary.json)
 - [최종 체크포인트 검증 기록](results/msrvtt9k_split_training/checkpoint_verification.json)
 - [분할 실행 설명](RESUME_TRAINING.md)
