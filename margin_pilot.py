@@ -16,6 +16,7 @@ import io
 import json
 from pathlib import Path
 import random
+import re
 import shutil
 import subprocess
 import sys
@@ -288,7 +289,7 @@ def run(args):
                     except Exception as error:errors.append(type(error).__name__)
                     stop.wait(5)
             thread=threading.Thread(target=monitor,daemon=True);thread.start()
-            command=[sys.executable,'-u',str(Path(__file__).resolve()),'arm','--source-root',str(source),'--arm',name]
+            command=[sys.executable,'-u',str(Path(__file__).resolve()),'arm','--source-root',str(source),'--arm',name,'--experiment-name',NAME]
             print('STARTING',name,flush=True);start=time.perf_counter()
             try:
                 with (directory/'run.log').open('w',encoding='utf-8') as log:
@@ -314,11 +315,16 @@ def run(args):
 
 
 def main():
+    global NAME
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('mode',choices=['prepare','run','arm'])
     parser.add_argument('--source-root',type=Path,required=True)
     parser.add_argument('--arm',choices=[a[0] for a in ARMS])
+    parser.add_argument('--experiment-name',default=NAME,help='New result/output directory name for an independent rerun')
     args=parser.parse_args()
+    if not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_.-]*',args.experiment_name):
+        parser.error('--experiment-name must be a single safe directory name')
+    NAME=args.experiment_name
     if args.mode=='arm' and not args.arm:parser.error('--arm is required')
     {'prepare':prepare,'run':run,'arm':arm}[args.mode](args)
 

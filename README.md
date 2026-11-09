@@ -6,16 +6,19 @@ RTX 3060 Ti 8GiB에서 X-Pool의 공식 평가 재현, VRAM 측정, 시간 제�
 
 후속 비교에서는 공식 모델, 기존 epoch 1·2·3·4·5, 초기 6시간 snapshot을 모두 평가했습니다. 이 1K-A 테스트셋에서 자체 모델의 가장 높은 R@1은 **epoch 4의 40.3%**였습니다. 공식 모델만 맞힌 질의 117개 중 100개는 epoch 4에서 정답이 2–5위로 밀렸습니다. [체크포인트 비교](results/checkpoint_analysis_20261109/metrics_summary.csv)와 [실패·회복 사례 7건](results/checkpoint_analysis_20261109/casebook.md)에 결과를 정리했습니다. 이 비교는 독립 검증셋에서 모델을 선택한 결과가 아닙니다.
 
+별도의 **학습 8K·내부 검증 1K**에서 positive cosine margin 0.02를 시험했습니다. 두 seed, 조건당 3,000 updates의 고정 예산에서 원래 loss의 평균 R@1은 **40.40%**, margin은 **39.65%**로 차이는 **−0.75%p**였습니다. 이 설정은 사전에 정한 선별 기준을 통과하지 못해 채택을 보류했습니다. 공식 1K-A와 다른 분할의 결과입니다. [margin 파일럿 결과](results/margin_pilot_20261109/README.md)에 통제 조건·전체 기록·재현 절차를 정리했습니다.
+
 | MSR-VTT 1K-A, text-to-video | R@1 | R@5 | R@10 |
 | --- | ---: | ---: | ---: |
 | 공식 9K 체크포인트 평가 | 46.9% | 72.8% | 82.2% |
 | 직접 학습한 배치 4, epoch 4 | 40.3% | 68.0% | 77.7% |
 | 직접 학습한 배치 4 최종 모델 | 39.9% | 67.7% | 77.7% |
 
-학습 누적 시간은 약 **21시간 55분**, 장치 전체 VRAM 최대 사용량은 **6.59GiB**였으며 메모리 오류는 관측되지 않았습니다.
+기존 9K 배치 4 학습의 누적 시간은 약 **21시간 55분**, 장치 전체 VRAM 최대 사용량은 **6.59GiB**였으며 메모리 오류는 관측되지 않았습니다. 별도 margin 파일럿의 학습·검증 프로세스 시간 합은 약 **1시간 51분**입니다.
 
 - [상세 실험 보고서와 다음 실험 계획](report.md)
 - [체크포인트·질의별 후속 분석](results/checkpoint_analysis_20261109/README.md)
+- [Margin 0.02 대조 실험](results/margin_pilot_20261109/README.md)
 - [최종 결과 JSON](results/msrvtt9k_split_training/completion_summary.json)
 - [최종 체크포인트 검증 기록](results/msrvtt9k_split_training/checkpoint_verification.json)
 - [분할 실행 설명](RESUME_TRAINING.md)
@@ -25,7 +28,7 @@ RTX 3060 Ti 8GiB에서 X-Pool의 공식 평가 재현, VRAM 측정, 시간 제�
 
 기반 코드는 [layer6ai-labs/xpool](https://github.com/layer6ai-labs/xpool)의 커밋 [`bc88718199007d395136adc99a3e69adbee874a0`](https://github.com/layer6ai-labs/xpool/tree/bc88718199007d395136adc99a3e69adbee874a0)입니다. 원 논문은 **X-Pool: Cross-Modal Language-Video Attention for Text-Video Retrieval, CVPR 2022**입니다. 저자, 논문 인용 형식과 원본 사용법은 [원본 README](README_UPSTREAM.md)에 보존했습니다. 이 저장소는 해당 구현을 바탕으로 수행한 별도 실험 기록입니다.
 
-추가 코드는 시간 제한, 측정, 부분 epoch 재개, 셔플·난수 상태 저장과 회귀 테스트를 제공합니다. 모델 구조를 개선한 실험은 아직 수행하지 않았습니다.
+추가 코드는 시간 제한, 측정, 부분 epoch 재개, 셔플·난수 상태 저장과 회귀 테스트를 제공합니다. 모델 구조는 유지했고, 별도 entry point에서 margin loss 대조 실험을 수행했습니다. 이 파일럿에서는 R@1 개선을 확인하지 못했습니다.
 
 ## 준비
 

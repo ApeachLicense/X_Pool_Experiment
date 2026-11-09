@@ -1,0 +1,100 @@
+{
+  "status": "finished",
+  "arm": "seed24_baseline",
+  "seed": 24,
+  "margin": 0.0,
+  "protocol_sha256": "9daf531dee40576b6f7cde42c78d3480c9b1a48de5e0ca586dd2f7822edb7bd0",
+  "started_at_utc": "2026-11-09T08:51:14.591243+00:00",
+  "initial_pooling_sha256": "a67b3f40ac68f74dda983bda70669aa9d48acd700daab062c10d1b316085522a",
+  "initial_logit_scale": 4.605170249938965,
+  "base_clip_sha256": "a63082132ba4f97a80bea76823f544493bffa8082296d62d71581a4feff1576f",
+  "trainable_parameters": 152593665,
+  "validations": [
+    {
+      "step": 0,
+      "metrics": {
+        "R1": 31.7,
+        "R5": 56.1,
+        "R10": 66.3,
+        "R50": 83.2,
+        "R100": 88.3,
+        "MedR": 4.0,
+        "MeanR": 45.271
+      },
+      "canonical_batch4_clip_loss": 0.2503144619273953,
+      "seconds": 133.519
+    },
+    {
+      "step": 1000,
+      "metrics": {
+        "R1": 38.6,
+        "R5": 64.2,
+        "R10": 74.8,
+        "R50": 90.2,
+        "R100": 94.2,
+        "MedR": 2.0,
+        "MeanR": 23.589
+      },
+      "canonical_batch4_clip_loss": 0.24216837441953967,
+      "seconds": 133.2
+    },
+    {
+      "step": 2000,
+      "metrics": {
+        "R1": 40.4,
+        "R5": 65.7,
+        "R10": 75.9,
+        "R50": 91.1,
+        "R100": 95.3,
+        "MedR": 2.0,
+        "MeanR": 21.939
+      },
+      "canonical_batch4_clip_loss": 0.2455027263458117,
+      "seconds": 132.829
+    },
+    {
+      "step": 3000,
+      "metrics": {
+        "R1": 40.7,
+        "R5": 66.4,
+        "R10": 77.5,
+        "R50": 91.3,
+        "R100": 95.5,
+        "MedR": 2.0,
+        "MeanR": 21.288
+      },
+      "canonical_batch4_clip_loss": 0.24325690605148464,
+      "seconds": 132.459
+    }
+  ],
+  "training_chunks": [
+    {
+      "target_step": 1000,
+      "elapsed_seconds": 371.781,
+      "steps": 1000
+    },
+    {
+      "target_step": 2000,
+      "elapsed_seconds": 372.125,
+      "steps": 1000
+    },
+    {
+      "target_step": 3000,
+      "elapsed_seconds": 370.766,
+      "steps": 1000
+    }
+  ],
+  "completed_at_utc": "2026-11-09T09:18:48.533090+00:00",
+  "steps": 3000,
+  "batch_order_sha256": "2a785e7354f136e7712cadf3c756e2fea215e661f3c9153ed1c0e8dbd8020164",
+  "first_three_input_sha256": [
+    "887f2af5a0f7a15da64b44ec3500c6f3bd451ff2284155b4eff5aed15e9d3d7b",
+    "50b519295899f42852ac6fb53b5fa0021e000acf4c1f64bc7a7b68078dbcbf27",
+    "db915728f2aa6be4c038011af7c17d96b18073e3f7380be65b9abd47196ad845"
+  ],
+  "duplicate_video_batches": 1,
+  "scheduler_last_epoch": 3000,
+  "final_checkpoint_sha256": "c197c5a5825561fe3368d3d48aa4ecc7f2e5d0cc72f5bcbef8d398aca935b4fc",
+  "all_model_tensors_finite": true,
+  "best_validation_step": 3000
+}

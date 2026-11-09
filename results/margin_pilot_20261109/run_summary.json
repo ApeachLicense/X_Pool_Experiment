@@ -1,0 +1,40 @@
+{
+  "status": "finished",
+  "started_at_utc": "2026-11-09T08:51:08.997653+00:00",
+  "protocol_sha256": "9daf531dee40576b6f7cde42c78d3480c9b1a48de5e0ca586dd2f7822edb7bd0",
+  "arms": [
+    {
+      "arm": "seed24_baseline",
+      "exit_code": 0,
+      "process_seconds": 1662.557,
+      "gpu_peak_used_mib": 6587.0,
+      "max_temperature_c": 71.94,
+      "telemetry_errors": []
+    },
+    {
+      "arm": "seed24_margin002",
+      "exit_code": 0,
+      "process_seconds": 1662.484,
+      "gpu_peak_used_mib": 6586.0,
+      "max_temperature_c": 72.19,
+      "telemetry_errors": []
+    },
+    {
+      "arm": "seed25_margin002",
+      "exit_code": 0,
+      "process_seconds": 1677.614,
+      "gpu_peak_used_mib": 6610.0,
+      "max_temperature_c": 72.88,
+      "telemetry_errors": []
+    },
+    {
+      "arm": "seed25_baseline",
+      "exit_code": 0,
+      "process_seconds": 1657.418,
+      "gpu_peak_used_mib": 6605.0,
+      "max_temperature_c": 72.5,
+      "telemetry_errors": []
+    }
+  ],
+  "completed_at_utc": "2026-11-09T10:42:09.633311+00:00"
+}

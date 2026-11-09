@@ -1,0 +1,9 @@
+{
+  "completed_at_utc": "2026-11-09T10:44:42.512697+00:00",
+  "passed": true,
+  "checks": [
+    "Fresh rerun directory option is exposed in CLI help",
+    "Path traversal experiment names are rejected before preparation"
+  ],
+  "note": "Post-run path-only usability change; model, loss, data and training budgets are unchanged from measured implementation commit 4bd71f9."
+}
