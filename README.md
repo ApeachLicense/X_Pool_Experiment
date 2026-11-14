@@ -22,6 +22,7 @@ RTX 3060 Ti 8GiB에서 X-Pool의 공식 평가 재현, VRAM 측정, 시간 제�
 - [최종 결과 JSON](results/msrvtt9k_split_training/completion_summary.json)
 - [최종 체크포인트 검증 기록](results/msrvtt9k_split_training/checkpoint_verification.json)
 - [분할 실행 설명](RESUME_TRAINING.md)
+- [긴 학습 전 사전 확인 3종: GradCache 동등성, step 시간, feature drift](FIRST_EXPERIMENT.md)
 - [전체 공개 기록 목록과 SHA-256](results/artifact_manifest.json)
 
 ## 코드 출처
