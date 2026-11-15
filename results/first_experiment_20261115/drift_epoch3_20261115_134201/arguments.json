@@ -1,0 +1,21 @@
+{
+  "command": "drift",
+  "source_root": "<repo>\\..\\xpool",
+  "videos_dir": "data/MSRVTT/vids",
+  "batch_size": 4,
+  "num_workers": 2,
+  "seed": 24,
+  "device": "cuda",
+  "name": "drift_epoch3_20261115_134201",
+  "clip_lr": 1e-06,
+  "noclip_lr": 3e-05,
+  "num_frames": 12,
+  "input_res": 224,
+  "embed_dim": 512,
+  "steps": 600,
+  "every": 50,
+  "probe_size": 32,
+  "checkpoint": "<xpool>\\outputs\\msrvtt9k_split_training\\checkpoint-epoch3.pth",
+  "lr_mode": "auto",
+  "tolerance_ratio": 0.1
+}

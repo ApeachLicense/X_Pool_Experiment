@@ -39,5 +39,48 @@
     }
   ],
   "total_wall_seconds": 384.21,
-  "wall_time_note": "From logs/run_status.txt (cmd %TIME%, 10 ms resolution); includes Python start-up and model loading."
+  "wall_time_note": "From logs/run_status.txt (cmd %TIME%, 10 ms resolution); includes Python start-up and model loading.",
+  "recheck": {
+    "runner": "run_first_experiment_recheck.bat (repo root)",
+    "gpu_memory_used_before_run_mib": 1087,
+    "commands": [
+      {
+        "command": "gradcheck_tf32off",
+        "invocation": "run_with_tf32_off.py gradcheck (torch.backends.cuda.matmul.allow_tf32=False, cudnn.allow_tf32=False)",
+        "exit_code": 0,
+        "local_start": "2026-11-15T22:42:01.99+09:00",
+        "local_end": "2026-11-15T22:42:39.38+09:00",
+        "wall_seconds": 37.39,
+        "output": "gradcheck_tf32off_20261115_134201"
+      },
+      {
+        "command": "drift_every10",
+        "invocation": "drift --every 10 --steps 100",
+        "exit_code": 0,
+        "local_start": "2026-11-15T22:42:39.38+09:00",
+        "local_end": "2026-11-15T22:43:43.10+09:00",
+        "wall_seconds": 63.72,
+        "output": "drift_every10_20261115_134201"
+      },
+      {
+        "command": "drift_epoch1",
+        "invocation": "drift --checkpoint <xpool>\\outputs\\msrvtt9k_train_vram_20261107_054714\\checkpoint-epoch1.pth",
+        "exit_code": 0,
+        "local_start": "2026-11-15T22:43:43.10+09:00",
+        "local_end": "2026-11-15T22:47:57.95+09:00",
+        "wall_seconds": 254.85,
+        "output": "drift_epoch1_20261115_134201"
+      },
+      {
+        "command": "drift_epoch3",
+        "invocation": "drift --checkpoint <xpool>\\outputs\\msrvtt9k_split_training\\checkpoint-epoch3.pth",
+        "exit_code": 0,
+        "local_start": "2026-11-15T22:47:57.95+09:00",
+        "local_end": "2026-11-15T22:52:20.78+09:00",
+        "wall_seconds": 262.83,
+        "output": "drift_epoch3_20261115_134201"
+      }
+    ],
+    "total_wall_seconds": 618.79
+  }
 }

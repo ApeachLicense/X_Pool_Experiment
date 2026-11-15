@@ -1,7 +1,7 @@
 {
-  "exported_at_utc": "2026-11-15T13:29:32.312649+00:00",
+  "exported_at_utc": "2026-11-15T13:56:37.200216+00:00",
   "code_commit": "ccb0a2d2c5288ea59d850307aeeb4190da5bfcb1",
-  "description": "Outputs of run_first_experiment.bat (steptime, gradcheck, drift). Local absolute paths are replaced by <repo>, <xpool> or <user-home>; numeric results are preserved. nvidia_smi_before.txt is not exported (it lists unrelated desktop processes); its GPU line is in run_summary.json.",
+  "description": "Outputs of run_first_experiment.bat (steptime, gradcheck, drift) and run_first_experiment_recheck.bat (gradcheck with TF32 off, drift every 10 steps, drift from epoch-1 and epoch-3 checkpoints). Local absolute paths are replaced by <repo>, <xpool> or <user-home>; numeric results are preserved. nvidia_smi_before.txt is not exported (it lists unrelated desktop processes); its GPU line is in run_summary.json.",
   "artifacts": [
     {
       "source": "outputs/first_experiment/drift_20261115_132313/arguments.json",
@@ -40,6 +40,114 @@
       "local_paths_redacted": false
     },
     {
+      "source": "outputs/first_experiment/drift_epoch1_20261115_134201/arguments.json",
+      "export": "results/first_experiment_20261115/drift_epoch1_20261115_134201/arguments.json",
+      "source_bytes": 661,
+      "export_bytes": 531,
+      "source_sha256": "81244b270d89642eaa12fb8a28a29cd65465f7e46b3f0c89ed0b20c424675db5",
+      "export_sha256": "29b707ce0117aa65089949b3ddf2cb44a3713a76026207c25cd64365eaf48273",
+      "local_paths_redacted": true
+    },
+    {
+      "source": "outputs/first_experiment/drift_epoch1_20261115_134201/drift_by_lag.csv",
+      "export": "results/first_experiment_20261115/drift_epoch1_20261115_134201/drift_by_lag.csv",
+      "source_bytes": 3390,
+      "export_bytes": 3390,
+      "source_sha256": "99a41ea7656a4494f07380cacc0ed71a8e89d9e5410b13b61901e48bfa5cba7b",
+      "export_sha256": "99a41ea7656a4494f07380cacc0ed71a8e89d9e5410b13b61901e48bfa5cba7b",
+      "local_paths_redacted": false
+    },
+    {
+      "source": "outputs/first_experiment/drift_epoch1_20261115_134201/drift_pairs.csv",
+      "export": "results/first_experiment_20261115/drift_epoch1_20261115_134201/drift_pairs.csv",
+      "source_bytes": 19787,
+      "export_bytes": 19787,
+      "source_sha256": "cb7fc6f601383d4423c1ac5fd1a2924a1376feeee5c6f79308518e0aa398a296",
+      "export_sha256": "cb7fc6f601383d4423c1ac5fd1a2924a1376feeee5c6f79308518e0aa398a296",
+      "local_paths_redacted": false
+    },
+    {
+      "source": "outputs/first_experiment/drift_epoch1_20261115_134201/drift_report.json",
+      "export": "results/first_experiment_20261115/drift_epoch1_20261115_134201/drift_report.json",
+      "source_bytes": 11000,
+      "export_bytes": 10950,
+      "source_sha256": "4b7cfff20445c95eb4c9ffaaee6bcd9bd4a6a0f57a4da25fb05ac3c2d2c3aea2",
+      "export_sha256": "ff639e9b45a43a7cd9ecd64a4ef4cb4c3e440fc5b5ca20c8daf93cd690d60c26",
+      "local_paths_redacted": true
+    },
+    {
+      "source": "outputs/first_experiment/drift_epoch3_20261115_134201/arguments.json",
+      "export": "results/first_experiment_20261115/drift_epoch3_20261115_134201/arguments.json",
+      "source_bytes": 649,
+      "export_bytes": 519,
+      "source_sha256": "621d72fbafdd9c184e25015cf7475fcf1b02a0c29f84c58c2756eb4889fa01d3",
+      "export_sha256": "fdd1159a78c5e0f70ce8968095913528dd48f7668b0a4edd58c46df17099a729",
+      "local_paths_redacted": true
+    },
+    {
+      "source": "outputs/first_experiment/drift_epoch3_20261115_134201/drift_by_lag.csv",
+      "export": "results/first_experiment_20261115/drift_epoch3_20261115_134201/drift_by_lag.csv",
+      "source_bytes": 3468,
+      "export_bytes": 3468,
+      "source_sha256": "d4dce3a583cebb056800bcecc670689d12d409e82bdcd049a2bf62d11ca67fa1",
+      "export_sha256": "d4dce3a583cebb056800bcecc670689d12d409e82bdcd049a2bf62d11ca67fa1",
+      "local_paths_redacted": false
+    },
+    {
+      "source": "outputs/first_experiment/drift_epoch3_20261115_134201/drift_pairs.csv",
+      "export": "results/first_experiment_20261115/drift_epoch3_20261115_134201/drift_pairs.csv",
+      "source_bytes": 20245,
+      "export_bytes": 20245,
+      "source_sha256": "76e264654b9f9af807874ded96d4785861464f2c74ea2118c4e90e9a5379881a",
+      "export_sha256": "76e264654b9f9af807874ded96d4785861464f2c74ea2118c4e90e9a5379881a",
+      "local_paths_redacted": false
+    },
+    {
+      "source": "outputs/first_experiment/drift_epoch3_20261115_134201/drift_report.json",
+      "export": "results/first_experiment_20261115/drift_epoch3_20261115_134201/drift_report.json",
+      "source_bytes": 11100,
+      "export_bytes": 11050,
+      "source_sha256": "922f758c89f9723e5487cbbe6950d2addecee2f9bcdcedabc0603f33587bf5d7",
+      "export_sha256": "14448c5225245b6d4cb25d8a2c1eaa02d1ee8a5a482266da06f3dbd629f5d10f",
+      "local_paths_redacted": true
+    },
+    {
+      "source": "outputs/first_experiment/drift_every10_20261115_134201/arguments.json",
+      "export": "results/first_experiment_20261115/drift_every10_20261115_134201/arguments.json",
+      "source_bytes": 538,
+      "export_bytes": 458,
+      "source_sha256": "fb4c9ef862baa270570859a6b919db73e4481907e27ed0483c4b712a7caa23d9",
+      "export_sha256": "86973400d902ae1451afeada966879f21c180d876d43d1f40075d317e5d36e6c",
+      "local_paths_redacted": true
+    },
+    {
+      "source": "outputs/first_experiment/drift_every10_20261115_134201/drift_by_lag.csv",
+      "export": "results/first_experiment_20261115/drift_every10_20261115_134201/drift_by_lag.csv",
+      "source_bytes": 2853,
+      "export_bytes": 2853,
+      "source_sha256": "50af8ff21bfdc74ef00ac249b721b75df1ccd57d431f304f5c70ede28c78038c",
+      "export_sha256": "50af8ff21bfdc74ef00ac249b721b75df1ccd57d431f304f5c70ede28c78038c",
+      "local_paths_redacted": false
+    },
+    {
+      "source": "outputs/first_experiment/drift_every10_20261115_134201/drift_pairs.csv",
+      "export": "results/first_experiment_20261115/drift_every10_20261115_134201/drift_pairs.csv",
+      "source_bytes": 14014,
+      "export_bytes": 14014,
+      "source_sha256": "6865f7a00f3736569e76fc8f4a35407c3bf2f6d2c1c94d6e4c88861fc1866ae8",
+      "export_sha256": "6865f7a00f3736569e76fc8f4a35407c3bf2f6d2c1c94d6e4c88861fc1866ae8",
+      "local_paths_redacted": false
+    },
+    {
+      "source": "outputs/first_experiment/drift_every10_20261115_134201/drift_report.json",
+      "export": "results/first_experiment_20261115/drift_every10_20261115_134201/drift_report.json",
+      "source_bytes": 9215,
+      "export_bytes": 9215,
+      "source_sha256": "fa161cffdb9d489cd603954b7ff594c040dc8fcff7cb76bfdb1c251b035cc73a",
+      "export_sha256": "fa161cffdb9d489cd603954b7ff594c040dc8fcff7cb76bfdb1c251b035cc73a",
+      "local_paths_redacted": false
+    },
+    {
       "source": "outputs/first_experiment/gradcheck_20261115_132236/arguments.json",
       "export": "results/first_experiment_20261115/gradcheck_20261115_132236/arguments.json",
       "source_bytes": 498,
@@ -55,6 +163,78 @@
       "export_bytes": 9738,
       "source_sha256": "ef635df597a66ca8b11b959cb70719889b2adef621631d0cbb57c05e469fe07d",
       "export_sha256": "ef635df597a66ca8b11b959cb70719889b2adef621631d0cbb57c05e469fe07d",
+      "local_paths_redacted": false
+    },
+    {
+      "source": "outputs/first_experiment/gradcheck_tf32off_20261115_134201/arguments.json",
+      "export": "results/first_experiment_20261115/gradcheck_tf32off_20261115_134201/arguments.json",
+      "source_bytes": 529,
+      "export_bytes": 449,
+      "source_sha256": "ca9a45fc989558faba651a81e5e44c499d639bdca6c9dc5d04246fa80d6efb8d",
+      "export_sha256": "99548cce5707907f176e448a943295a12f309d73663569b95f1ff25fdf846ac8",
+      "local_paths_redacted": true
+    },
+    {
+      "source": "outputs/first_experiment/gradcheck_tf32off_20261115_134201/gradcheck_report.json",
+      "export": "results/first_experiment_20261115/gradcheck_tf32off_20261115_134201/gradcheck_report.json",
+      "source_bytes": 9747,
+      "export_bytes": 9747,
+      "source_sha256": "cf46b03556162a4f4d9fe4ab4ba6b8579f575b52aa0a7ac81024ba37e0886f03",
+      "export_sha256": "cf46b03556162a4f4d9fe4ab4ba6b8579f575b52aa0a7ac81024ba37e0886f03",
+      "local_paths_redacted": false
+    },
+    {
+      "source": "outputs/first_experiment/recheck/gpu_before.csv",
+      "export": "results/first_experiment_20261115/logs/recheck/gpu_before.csv",
+      "source_bytes": 117,
+      "export_bytes": 117,
+      "source_sha256": "0243d894b0ba84cbd632fc0e3e07548432065fa91fe1406a01255146f8167d67",
+      "export_sha256": "0243d894b0ba84cbd632fc0e3e07548432065fa91fe1406a01255146f8167d67",
+      "local_paths_redacted": false
+    },
+    {
+      "source": "outputs/first_experiment/recheck/run_drift_epoch1.log",
+      "export": "results/first_experiment_20261115/logs/recheck/run_drift_epoch1.log",
+      "source_bytes": 3647,
+      "export_bytes": 3529,
+      "source_sha256": "bf53e12beefd7ee4a1291e07426a482b370c64543fe501a7e001c9276b06d859",
+      "export_sha256": "fadf192e5fcc2d499f2579609745f394987ce8efcaf761b21cb82d5fc54b0a18",
+      "local_paths_redacted": true
+    },
+    {
+      "source": "outputs/first_experiment/recheck/run_drift_epoch3.log",
+      "export": "results/first_experiment_20261115/logs/recheck/run_drift_epoch3.log",
+      "source_bytes": 3680,
+      "export_bytes": 3562,
+      "source_sha256": "9feb129303a33d6ef40f90c4f12089486cd2c5d099d6b334cf64dc6b966d92aa",
+      "export_sha256": "28bd9c11d370ccc4c5a4bb63588a39d86d39d7dae62a49f2b8c372e93a155e24",
+      "local_paths_redacted": true
+    },
+    {
+      "source": "outputs/first_experiment/recheck/run_drift_every10.log",
+      "export": "results/first_experiment_20261115/logs/recheck/run_drift_every10.log",
+      "source_bytes": 3161,
+      "export_bytes": 3043,
+      "source_sha256": "0745782df5ab34fb302557d844b527c319ad73f3413d26f65858a5c376828048",
+      "export_sha256": "ed7784a8283299099b75872e036c5fde262c55899f3935d8465fa328c80a4e48",
+      "local_paths_redacted": true
+    },
+    {
+      "source": "outputs/first_experiment/recheck/run_gradcheck_tf32off.log",
+      "export": "results/first_experiment_20261115/logs/recheck/run_gradcheck_tf32off.log",
+      "source_bytes": 1097,
+      "export_bytes": 979,
+      "source_sha256": "06aa012df197a96f79ef946b288b1c1b7aac2b582de03ab8b5f5d09a8d368a7d",
+      "export_sha256": "23958d866284bd31cfe30d42fef472aa60a392fc8faca4ad4270454f49248117",
+      "local_paths_redacted": true
+    },
+    {
+      "source": "outputs/first_experiment/recheck/run_status.txt",
+      "export": "results/first_experiment_20261115/logs/recheck/run_status.txt",
+      "source_bytes": 233,
+      "export_bytes": 233,
+      "source_sha256": "01b0ad88b944feed1f5159c5793bc5c3da20a2d302da5997b75bcb35981538e7",
+      "export_sha256": "01b0ad88b944feed1f5159c5793bc5c3da20a2d302da5997b75bcb35981538e7",
       "local_paths_redacted": false
     },
     {

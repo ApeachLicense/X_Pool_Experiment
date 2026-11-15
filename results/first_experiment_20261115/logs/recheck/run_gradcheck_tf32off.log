@@ -1,0 +1,10 @@
+TF32 allowed: matmul False, cudnn False
+[W ..\aten\src\ATen\Context.cpp:70] Warning: torch.use_deterministic_algorithms is in beta, and its design and functionality may change in the future. (function operator ())
+<xpool>\.venv\lib\site-packages\torchvision\transforms\transforms.py:257: UserWarning: Argument interpolation should be of type InterpolationMode instead of int. Please, use InterpolationMode enum.
+  warnings.warn(
+batch 0: loss 0.069361 | grad_cache rel_err 5.587e-06 cos 1.000000 | accumulation rel_err 1.039e+00 cos 0.067884
+batch 1: loss 0.932290 | grad_cache rel_err 3.763e-06 cos 1.000000 | accumulation rel_err 9.967e-01 cos 0.509605
+batch 2: loss 0.867826 | grad_cache rel_err 2.424e-06 cos 1.000000 | accumulation rel_err 8.412e-01 cos 0.551495
+forward == pool(encode): {'bitwise_equal': True, 'max_abs_diff': 0.0}
+GRADCHECK PASSED (3 informative batches, tolerance 0.01)
+results: <repo>\outputs\first_experiment\gradcheck_tf32off_20261115_134201

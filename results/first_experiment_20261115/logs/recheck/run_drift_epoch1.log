@@ -1,0 +1,31 @@
+[W ..\aten\src\ATen\Context.cpp:70] Warning: torch.use_deterministic_algorithms is in beta, and its design and functionality may change in the future. (function operator ())
+<xpool>\.venv\lib\site-packages\torchvision\transforms\transforms.py:257: UserWarning: Argument interpolation should be of type InterpolationMode instead of int. Please, use InterpolationMode enum.
+  warnings.warn(
+probe: 32 videos; lr mode checkpoint; clip lr 9.69846e-07, pooling lr 2.90954e-05
+step 50: lag 50 steps -> frame cos-dist 2.61e-03, stale logit error video 0.3173 text 0.2243, loss(mean) 0.0508
+step 100: lag 50 steps -> frame cos-dist 2.11e-03, stale logit error video 0.2873 text 0.2375, loss(mean) 0.0946
+step 150: lag 50 steps -> frame cos-dist 4.06e-03, stale logit error video 0.4705 text 0.3154, loss(mean) 0.1965
+step 200: lag 50 steps -> frame cos-dist 2.58e-03, stale logit error video 0.3112 text 0.2991, loss(mean) 0.2292
+step 250: lag 50 steps -> frame cos-dist 3.76e-03, stale logit error video 0.3806 text 0.4146, loss(mean) 0.1195
+step 300: lag 50 steps -> frame cos-dist 4.68e-03, stale logit error video 0.4661 text 0.3013, loss(mean) 0.2639
+step 350: lag 50 steps -> frame cos-dist 2.33e-03, stale logit error video 0.3348 text 0.2714, loss(mean) 0.0723
+step 400: lag 50 steps -> frame cos-dist 4.83e-03, stale logit error video 0.4191 text 0.2478, loss(mean) 0.1596
+step 450: lag 50 steps -> frame cos-dist 3.66e-03, stale logit error video 0.3401 text 0.2294, loss(mean) 0.1164
+step 500: lag 50 steps -> frame cos-dist 3.72e-03, stale logit error video 0.3752 text 0.3872, loss(mean) 0.2561
+step 550: lag 50 steps -> frame cos-dist 3.25e-03, stale logit error video 0.3457 text 0.2379, loss(mean) 0.1700
+step 600: lag 50 steps -> frame cos-dist 3.93e-03, stale logit error video 0.4004 text 0.2977, loss(mean) 0.0796
+lag_steps bank_entries frame_cos_dist text_cos_dist logit_err_video logit_err_text neg_logit_std hardest_neg_agree
+       50          200      3.461e-03     9.472e-04          0.3707         0.2886        7.5618             0.958
+      100          400      7.283e-03     1.952e-03          0.5490         0.3928        7.5617             0.946
+      150          600      1.047e-02     2.964e-03          0.6529         0.4836        7.5550             0.931
+      200          800      1.284e-02     3.902e-03          0.7157         0.5514        7.5546             0.917
+      250         1000      1.532e-02     4.909e-03          0.7970         0.6175        7.5515             0.918
+      300         1200      1.787e-02     5.937e-03          0.8666         0.6878        7.5394             0.915
+      350         1400      2.035e-02     6.900e-03          0.9258         0.7571        7.5250             0.906
+      400         1600      2.346e-02     7.686e-03          0.9983         0.8056        7.5051             0.900
+      450         1800      2.617e-02     8.454e-03          1.0829         0.8343        7.4838             0.891
+      500         2000      2.793e-02     8.777e-03          1.1361         0.8482        7.4821             0.885
+      550         2200      2.849e-02     8.886e-03          1.0898         0.8406        7.4473             0.844
+      600         2400      2.790e-02     8.826e-03          1.0352         0.7662        7.4349             0.812
+SUGGESTED max bank entries: 800 (the next longer lag exceeds the tolerance; heuristic, tolerance ratio 0.1)
+results: <repo>\outputs\first_experiment\drift_epoch1_20261115_134201
