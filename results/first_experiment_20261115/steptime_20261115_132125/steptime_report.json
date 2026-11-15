@@ -1,0 +1,42 @@
+{
+  "measured_steps": 100,
+  "batch_size": 4,
+  "num_workers": 2,
+  "mean_seconds": {
+    "data_wait": 0.005348547999999838,
+    "tokenize": 0.0015920240000000519,
+    "to_device": 0.016878347999999762,
+    "gpu_step": 0.3591073890000001,
+    "total": 0.3829263089999998
+  },
+  "share_of_step": {
+    "data_wait": 0.013967564709688934,
+    "tokenize": 0.004157520553125674,
+    "to_device": 0.04407727440842873,
+    "gpu_step": 0.9377976403287566
+  },
+  "decode_seconds_per_video": 0.1123322574999996,
+  "transform_seconds_per_video": 0.006835010000000352,
+  "decoded_videos": 40,
+  "loader_supply_samples_per_second": 16.78313216336861,
+  "gpu_demand_samples_per_second": 10.593844270399181,
+  "verdict": "gpu-bound: the loader keeps up; faster decoding would change little",
+  "speedup_if_data_wait_removed": 1.0141654211461884,
+  "projected_hours_vanilla": 23.93289431249999,
+  "no_grad_encode_seconds_per_chunk": 0.05965378750000028,
+  "grad_cache_estimate": {
+    "effective_batch": 32,
+    "chunks_per_update": 8.0,
+    "seconds_per_update": 3.5406407720000006,
+    "time_ratio_to_vanilla": 1.1557839879317362,
+    "projected_hours": 27.661256031250005
+  },
+  "environment": {
+    "python": "3.9.18",
+    "torch": "1.8.1+cu111",
+    "device": "cuda",
+    "utc_time": "2026-11-15T13:22:34.513036+00:00",
+    "gpu": "NVIDIA GeForce RTX 3060 Ti",
+    "gpu_total_mib": 8191.4
+  }
+}

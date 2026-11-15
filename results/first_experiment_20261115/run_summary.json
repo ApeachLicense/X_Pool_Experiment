@@ -1,0 +1,43 @@
+{
+  "runner": "run_first_experiment.bat (repo root), double-clicked from Windows Explorer",
+  "code_commit": "ccb0a2d2c5288ea59d850307aeeb4190da5bfcb1",
+  "python": "<repo>\\..\\xpool\\.venv\\Scripts\\python.exe (Python 3.9.18, torch 1.8.1+cu111, transformers 4.6.1)",
+  "source_root": "<repo>\\..\\xpool (MSR-VTT 10,000 videos, openai/clip-vit-base-patch32)",
+  "options": "defaults of first_experiment.py (batch 4, 2 workers, seed 24, FP32, 12 frames, 224px)",
+  "gpu": {
+    "name": "NVIDIA GeForce RTX 3060 Ti",
+    "memory_total_mib": 8192,
+    "driver": "621.01",
+    "driver_model": "WDDM",
+    "memory_used_before_run_mib": 1110,
+    "note": "memory_used_before_run_mib is the desktop and other processes before the first command started"
+  },
+  "commands": [
+    {
+      "command": "steptime",
+      "exit_code": 0,
+      "local_start": "2026-11-15T22:21:15.81+09:00",
+      "local_end": "2026-11-15T22:22:35.11+09:00",
+      "wall_seconds": 79.3,
+      "output": "steptime_20261115_132125"
+    },
+    {
+      "command": "gradcheck",
+      "exit_code": 0,
+      "local_start": "2026-11-15T22:22:35.11+09:00",
+      "local_end": "2026-11-15T22:23:11.68+09:00",
+      "wall_seconds": 36.57,
+      "output": "gradcheck_20261115_132236"
+    },
+    {
+      "command": "drift",
+      "exit_code": 0,
+      "local_start": "2026-11-15T22:23:11.68+09:00",
+      "local_end": "2026-11-15T22:27:40.02+09:00",
+      "wall_seconds": 268.34,
+      "output": "drift_20261115_132313"
+    }
+  ],
+  "total_wall_seconds": 384.21,
+  "wall_time_note": "From logs/run_status.txt (cmd %TIME%, 10 ms resolution); includes Python start-up and model loading."
+}

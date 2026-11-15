@@ -119,8 +119,10 @@ Python 3.9.25, PyTorch 1.8.1(CPU 실행), Transformers 4.6.1에서 기존 13개�
 
 추가로 ViT-B/32와 같은 크기의 무작위 가중치 모델(1.5억 파라미터, 12프레임, 224px, logit scale 100)을 CPU FP32로 돌렸을 때 GradCache의 상대 오차는 `1.2e-7`, 단순 accumulation은 `0.85~0.90`이었다.
 
-확인하지 못한 것:
+작성 시점에 확인하지 못한 것:
 
 - 실제 사전학습 가중치와 MSR-VTT 영상을 쓴 GPU 실행. 이 환경에는 GPU, 영상, 가중치가 없었다.
 - Windows에서의 실행. 테스트는 Linux에서만 돌렸다.
 - GPU에서의 시간·VRAM 수치. 문서의 예상 시간은 모두 추정이다.
+
+이 세 가지는 2026-11-15에 Windows와 RTX 3060 Ti에서 세 명령을 실행해 확인했다. 실행 시간은 steptime 79초, gradcheck 37초, drift 268초였다. 결과는 [results/first_experiment_20261115](results/first_experiment_20261115/README.md)에 있다. 단위 테스트는 Windows에서 다시 돌리지 않았다.

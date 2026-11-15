@@ -1,0 +1,18 @@
+{
+  "command": "steptime",
+  "source_root": "<repo>\\..\\xpool",
+  "videos_dir": "data/MSRVTT/vids",
+  "batch_size": 4,
+  "num_workers": 2,
+  "seed": 24,
+  "device": "cuda",
+  "name": null,
+  "clip_lr": 1e-06,
+  "noclip_lr": 3e-05,
+  "num_frames": 12,
+  "input_res": 224,
+  "embed_dim": 512,
+  "steps": 100,
+  "warmup": 10,
+  "decode_videos": 40
+}

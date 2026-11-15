@@ -1,0 +1,13 @@
+[W ..\aten\src\ATen\Context.cpp:70] Warning: torch.use_deterministic_algorithms is in beta, and its design and functionality may change in the future. (function operator ())
+<xpool>\.venv\lib\site-packages\torchvision\transforms\transforms.py:257: UserWarning: Argument interpolation should be of type InterpolationMode instead of int. Please, use InterpolationMode enum.
+  warnings.warn(
+mean step 0.383s over 100 steps
+  data_wait  0.0053s    1.4%
+  tokenize   0.0016s    0.4%
+  to_device  0.0169s    4.4%
+  gpu_step   0.3591s   93.8%
+one sample on one CPU process: decode 0.112s + transform 0.007s
+loader supply 16.8 samples/s vs GPU demand 10.6 samples/s
+VERDICT gpu-bound: the loader keeps up; faster decoding would change little
+projected 5 epochs: vanilla 23.9h, GradCache-32 about 27.7h (x1.16, estimate)
+results: <repo>\outputs\first_experiment\steptime_20261115_132125

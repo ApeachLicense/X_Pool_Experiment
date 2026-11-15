@@ -1,0 +1,133 @@
+{
+  "exported_at_utc": "2026-11-15T13:29:32.312649+00:00",
+  "code_commit": "ccb0a2d2c5288ea59d850307aeeb4190da5bfcb1",
+  "description": "Outputs of run_first_experiment.bat (steptime, gradcheck, drift). Local absolute paths are replaced by <repo>, <xpool> or <user-home>; numeric results are preserved. nvidia_smi_before.txt is not exported (it lists unrelated desktop processes); its GPU line is in run_summary.json.",
+  "artifacts": [
+    {
+      "source": "outputs/first_experiment/drift_20261115_132313/arguments.json",
+      "export": "results/first_experiment_20261115/drift_20261115_132313/arguments.json",
+      "source_bytes": 511,
+      "export_bytes": 431,
+      "source_sha256": "b0527ddf9a2e32e196966bda28693567cd57bc4e971a74bff90b809fc38406e1",
+      "export_sha256": "a4b1b83cca69707c0ead492cd36968afb634a50db6c9483b49df74d848156184",
+      "local_paths_redacted": true
+    },
+    {
+      "source": "outputs/first_experiment/drift_20261115_132313/drift_by_lag.csv",
+      "export": "results/first_experiment_20261115/drift_20261115_132313/drift_by_lag.csv",
+      "source_bytes": 3356,
+      "export_bytes": 3356,
+      "source_sha256": "b823df126992113ee4f2e221b96035b858b63f88bfd803867f457e9a43516fb0",
+      "export_sha256": "b823df126992113ee4f2e221b96035b858b63f88bfd803867f457e9a43516fb0",
+      "local_paths_redacted": false
+    },
+    {
+      "source": "outputs/first_experiment/drift_20261115_132313/drift_pairs.csv",
+      "export": "results/first_experiment_20261115/drift_20261115_132313/drift_pairs.csv",
+      "source_bytes": 19616,
+      "export_bytes": 19616,
+      "source_sha256": "836e7cdcf6cc9049e160431c9fb8e8f89c45a94b5c308b7b82fd9938e2e25cfa",
+      "export_sha256": "836e7cdcf6cc9049e160431c9fb8e8f89c45a94b5c308b7b82fd9938e2e25cfa",
+      "local_paths_redacted": false
+    },
+    {
+      "source": "outputs/first_experiment/drift_20261115_132313/drift_report.json",
+      "export": "results/first_experiment_20261115/drift_20261115_132313/drift_report.json",
+      "source_bytes": 10816,
+      "export_bytes": 10816,
+      "source_sha256": "bccebcb3c3ccacedd42e5e7996254104b1771d85a984c70b2cef1cb70d67c959",
+      "export_sha256": "bccebcb3c3ccacedd42e5e7996254104b1771d85a984c70b2cef1cb70d67c959",
+      "local_paths_redacted": false
+    },
+    {
+      "source": "outputs/first_experiment/gradcheck_20261115_132236/arguments.json",
+      "export": "results/first_experiment_20261115/gradcheck_20261115_132236/arguments.json",
+      "source_bytes": 498,
+      "export_bytes": 418,
+      "source_sha256": "a3dc11e4bf8a2db601752232c24f4b64315531978ad6bfb9c5bd20861c6affb5",
+      "export_sha256": "47f7ebd2e79b74d437f8a65606c4c47cb51fb23785f0d66f92a0bfbdb0648a1f",
+      "local_paths_redacted": true
+    },
+    {
+      "source": "outputs/first_experiment/gradcheck_20261115_132236/gradcheck_report.json",
+      "export": "results/first_experiment_20261115/gradcheck_20261115_132236/gradcheck_report.json",
+      "source_bytes": 9738,
+      "export_bytes": 9738,
+      "source_sha256": "ef635df597a66ca8b11b959cb70719889b2adef621631d0cbb57c05e469fe07d",
+      "export_sha256": "ef635df597a66ca8b11b959cb70719889b2adef621631d0cbb57c05e469fe07d",
+      "local_paths_redacted": false
+    },
+    {
+      "source": "outputs/first_experiment/run_drift.log",
+      "export": "results/first_experiment_20261115/logs/run_drift.log",
+      "source_bytes": 3634,
+      "export_bytes": 3516,
+      "source_sha256": "57fff18de92682cc18439dfb00fa3b6b2b0b8d1e574c67c1c3b43369d69f0e90",
+      "export_sha256": "7b031f0e2667ce92f0a75ebeb751aa0287a21bedadbcace81e6d30c5d7d1d6bf",
+      "local_paths_redacted": true
+    },
+    {
+      "source": "outputs/first_experiment/run_gradcheck.log",
+      "export": "results/first_experiment_20261115/logs/run_gradcheck.log",
+      "source_bytes": 1048,
+      "export_bytes": 930,
+      "source_sha256": "9b44368d920196511456764da09bfd8ac9607cc71a020cefe4d1a87ed041e23c",
+      "export_sha256": "ec308dab6a9038f4e3524eb5ab7439636c7911dedc5b6372001f1ae8ed8df0ec",
+      "local_paths_redacted": true
+    },
+    {
+      "source": "outputs/first_experiment/run_status.txt",
+      "export": "results/first_experiment_20261115/logs/run_status.txt",
+      "source_bytes": 155,
+      "export_bytes": 155,
+      "source_sha256": "f6180e9dbeda6823f77e5d1845d62af969c50e0078dc484688b11008e64a21c1",
+      "export_sha256": "f6180e9dbeda6823f77e5d1845d62af969c50e0078dc484688b11008e64a21c1",
+      "local_paths_redacted": false
+    },
+    {
+      "source": "outputs/first_experiment/run_steptime.log",
+      "export": "results/first_experiment_20261115/logs/run_steptime.log",
+      "source_bytes": 1009,
+      "export_bytes": 891,
+      "source_sha256": "9fe66eacced08e36684b45de1953b3b60e4166f8124311ead09445e2f450115f",
+      "export_sha256": "97d7be103f24fce72fc4417c147dc9a3633d33929a56fc06286fdc478ced61c3",
+      "local_paths_redacted": true
+    },
+    {
+      "source": "outputs/first_experiment/steptime_20261115_132125/arguments.json",
+      "export": "results/first_experiment_20261115/steptime_20261115_132125/arguments.json",
+      "source_bytes": 446,
+      "export_bytes": 366,
+      "source_sha256": "04356d352913f8bc03a569436331e79fcfd9d5c80a710a2f164d449a0b421023",
+      "export_sha256": "6900195dc82a6933b8994f0c7ef93126ce3521c6f8aabeb5507eb7c0e23cd8d0",
+      "local_paths_redacted": true
+    },
+    {
+      "source": "outputs/first_experiment/steptime_20261115_132125/decode_times.csv",
+      "export": "results/first_experiment_20261115/steptime_20261115_132125/decode_times.csv",
+      "source_bytes": 2425,
+      "export_bytes": 2425,
+      "source_sha256": "78ab7158783215194931d6fc6a4e79b106a2e2610e745ca571bcb7fc9e403f35",
+      "export_sha256": "78ab7158783215194931d6fc6a4e79b106a2e2610e745ca571bcb7fc9e403f35",
+      "local_paths_redacted": false
+    },
+    {
+      "source": "outputs/first_experiment/steptime_20261115_132125/step_times.csv",
+      "export": "results/first_experiment_20261115/steptime_20261115_132125/step_times.csv",
+      "source_bytes": 14547,
+      "export_bytes": 14547,
+      "source_sha256": "42f3894fdd00420ce90592a76ecb1f09013bce7b17a7104cd7cb160e21e2cc5e",
+      "export_sha256": "42f3894fdd00420ce90592a76ecb1f09013bce7b17a7104cd7cb160e21e2cc5e",
+      "local_paths_redacted": false
+    },
+    {
+      "source": "outputs/first_experiment/steptime_20261115_132125/steptime_report.json",
+      "export": "results/first_experiment_20261115/steptime_20261115_132125/steptime_report.json",
+      "source_bytes": 1426,
+      "export_bytes": 1426,
+      "source_sha256": "7e9d0aa84ff29d43a4fbf3c65468121bbffa7cf99d3ab8de587b64f9c5e5a141",
+      "export_sha256": "7e9d0aa84ff29d43a4fbf3c65468121bbffa7cf99d3ab8de587b64f9c5e5a141",
+      "local_paths_redacted": false
+    }
+  ]
+}
