@@ -87,3 +87,21 @@ Raw training loss is not directly comparable across batch sizes.
 [First experiment results](results/first_experiment_20261115/README.md):
 batch-4 GradCache 2+2 gradient error 2.4e-6–5.6e-6 after disabling TF32.
 **No measured batch-32 VRAM, throughput or retrieval gain yet.**
+
+## Matched-exposure reporting
+
+Run a baseline (4 × 2,400 = 9,600 pairs) separately, with the original path:
+
+```powershell
+..\xpool\.venv\Scripts\python.exe train.py --exp_name=batch4_pilot2400 --videos_dir=..\xpool\data\MSRVTT\vids --dataset_name=MSRVTT --msrvtt_train_file=9k --huggingface --batch_size=4 --grad_cache_chunk_size=0 --eval_batch_size=4 --num_workers=2 --noclip_lr=3e-5 --transformer_dropout=0.3 --no_tensorboard --evals_per_epoch=0 --max_train_steps=2400 --profile_training --log_step=100
+```
+
+When both runs finish, compare performance and memory without conflating
+different loss scales:
+
+```powershell
+..\xpool\.venv\Scripts\python.exe summarize_second_experiment.py --baseline outputs\batch4_pilot2400 --gradcache outputs\gradcache32_pilot300 --output outputs\second_experiment_comparison.json
+```
+
+This tool reports a **matched-pair-exposure check**, measured throughput,
+step duration, and peak PyTorch VRAM; it does **not** claim any R@1 gain.

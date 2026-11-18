@@ -158,5 +158,43 @@ class SecondExperimentTests(unittest.TestCase):
         self.assertTrue(torch.isfinite(report['loss']))
 
 
+class SecondExperimentSummaryTests(unittest.TestCase):
+    def test_matched_exposures_and_throughput(self):
+        import csv
+        import json
+        from summarize_second_experiment import compare_runs
+
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            for name, batch, chunk, steps, duration in (
+                ('baseline', 4, 0, 8, 0.4),
+                ('gradcache', 32, 2, 1, 1.5),
+            ):
+                run = root / name
+                run.mkdir()
+                (run / 'training_profile.json').write_text(json.dumps({
+                    'completed_steps': steps,
+                    'processed_pairs': steps * batch,
+                    'status': 'finished',
+                    'stop_reason': 'step_limit',
+                    'batch_size': batch,
+                    'grad_cache_chunk_size': chunk,
+                }), encoding='utf-8')
+                with (run / 'training_steps.csv').open('w', newline='', encoding='utf-8') as output:
+                    writer = csv.DictWriter(output, fieldnames=[
+                        'batch_size', 'step_seconds', 'peak_reserved_mib', 'peak_allocated_mib'
+                    ])
+                    writer.writeheader()
+                    for _ in range(steps):
+                        writer.writerow({
+                            'batch_size': batch, 'step_seconds': duration,
+                            'peak_reserved_mib': 2500, 'peak_allocated_mib': 2100
+                        })
+            result = compare_runs(root / 'baseline', root / 'gradcache', warmup_steps=0)
+            self.assertTrue(result['total_pair_exposures_matched'])
+            self.assertEqual(result['warnings'], [])
+            self.assertGreater(result['measured_throughput_ratio_gradcache_over_baseline'], 1)
+
+
 if __name__ == '__main__':
     unittest.main()
