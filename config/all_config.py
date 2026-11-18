@@ -27,6 +27,7 @@ class AllConfig(Config):
         parser.add_argument('--save_every', type=int, default=1, help="Save model every n epochs")
         parser.add_argument('--log_step', type=int, default=10, help="Print training log every n steps")
         parser.add_argument('--evals_per_epoch', type=int, default=10, help="Number of times to evaluate per epoch")
+        parser.add_argument('--eval_batch_size', type=int, default=None, help='Validation batch size; default 4 with GradCache, else train batch size')
         parser.add_argument('--load_epoch', type=int, help="Epoch to load from exp_name, or -1 to load model_best.pth")
         parser.add_argument('--eval_window_size', type=int, default=5, help="Size of window to average metrics")
         parser.add_argument('--metric', type=str, default='t2v', help="'t2v'/'v2t'")
@@ -42,6 +43,8 @@ class AllConfig(Config):
         parser.add_argument('--clip_lr', type=float, default=1e-6, help='Learning rate used for CLIP params')
         parser.add_argument('--noclip_lr', type=float, default=1e-5, help='Learning rate used for new params')
         parser.add_argument('--batch_size', type=int, default=32)
+        parser.add_argument('--grad_cache_chunk_size', type=int, default=0, help='0: off; otherwise effective batch is encoded in chunks of this size')
+        parser.add_argument('--grad_cache_check_recompute', action='store_true', help='Verify deterministic feature recomputation every step (slower)')
         parser.add_argument('--num_epochs', type=int, default=5)
         parser.add_argument('--weight_decay', type=float, default=0.2, help='Weight decay')
         parser.add_argument('--warmup_proportion', type=float, default=0.1, help='Warmup proportion for learning rate schedule')
@@ -64,6 +67,16 @@ class AllConfig(Config):
         parser.add_argument('--tb_log_dir', type=str, default='logs')
 
         args = parser.parse_args()
+        if args.batch_size <= 0:
+            parser.error('--batch_size must be positive')
+        if not 0 <= args.grad_cache_chunk_size <= args.batch_size:
+            parser.error('--grad_cache_chunk_size must be 0 (off) or in [1, batch_size]')
+        if args.grad_cache_chunk_size and (not args.huggingface or args.arch != 'clip_transformer'):
+            parser.error('GradCache requires --huggingface --arch=clip_transformer')
+        if args.eval_batch_size is None:
+            args.eval_batch_size = min(args.batch_size, 4) if args.grad_cache_chunk_size else args.batch_size
+        if args.eval_batch_size <= 0:
+            parser.error('--eval_batch_size must be positive')
         if args.max_train_seconds < 0 or not math.isfinite(args.max_train_seconds) or args.max_train_steps < 0:
             parser.error('Training limits must be finite and nonnegative')
 

@@ -101,6 +101,8 @@ class TrainingProfile:
             "processed_pairs": self.examples,
             "training_pairs_per_epoch": self.dataset_size,
             "batch_size": self.config.batch_size,
+            "grad_cache_chunk_size": getattr(self.config, "grad_cache_chunk_size", 0),
+            "eval_batch_size": getattr(self.config, "eval_batch_size", self.config.batch_size),
             "precision": "float32",
             "device": str(self.device),
             "num_frames": self.config.num_frames,

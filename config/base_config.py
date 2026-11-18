@@ -18,6 +18,7 @@ class Config(ABC):
         self.save_every = args.save_every
         self.log_step = args.log_step
         self.evals_per_epoch = args.evals_per_epoch
+        self.eval_batch_size = args.eval_batch_size
         self.load_epoch = args.load_epoch
         self.eval_window_size = args.eval_window_size
         self.metric = args.metric
@@ -31,6 +32,8 @@ class Config(ABC):
         self.clip_lr = args.clip_lr
         self.noclip_lr = args.noclip_lr
         self.batch_size = args.batch_size
+        self.grad_cache_chunk_size = args.grad_cache_chunk_size
+        self.grad_cache_check_recompute = args.grad_cache_check_recompute
         self.num_epochs = args.num_epochs
         self.weight_decay = args.weight_decay
         self.warmup_proportion = args.warmup_proportion

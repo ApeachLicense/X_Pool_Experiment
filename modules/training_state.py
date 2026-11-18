@@ -10,7 +10,8 @@ import torch
 
 RESUME_SETTINGS = (
     'dataset_name', 'msrvtt_train_file', 'num_frames', 'video_sample_type', 'input_res',
-    'arch', 'huggingface', 'clip_arch', 'embed_dim', 'loss', 'batch_size', 'num_epochs',
+    'arch', 'huggingface', 'clip_arch', 'embed_dim', 'loss', 'batch_size',
+    'grad_cache_chunk_size', 'eval_batch_size', 'num_epochs',
     'clip_lr', 'noclip_lr', 'weight_decay', 'warmup_proportion', 'seed',
     'num_mha_heads', 'transformer_dropout',
 )
