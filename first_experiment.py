@@ -32,6 +32,7 @@ from datasets.model_transforms import init_transform_dict
 from datasets.video_capture import VideoCapture
 from model.clip_transformer import CLIPTransformer
 from modules.feature_drift import compare_snapshots, evaluation_mode, suggest_bank_size, summarize_by_lag
+from modules.grad_cache import accumulation_backward as chunk_accumulation_backward
 from modules.grad_cache import batch_size_of, grad_cache_backward, move_batch, split_batch
 from modules.loss import CLIPLoss
 from modules.metrics import sim_matrix_training
@@ -243,16 +244,9 @@ def accumulation_backward(model, loss_fn, data, chunk_size, pooling_type, before
     Reported only as a contrast. Each chunk sees only its own negatives, so this
     is NOT expected to match the full-batch gradient.
     """
-    total = batch_size_of(data)
-    before_pool()
-    loss_sum = 0.0
-    for chunk in split_batch(data, chunk_size):
-        text_features, pooled = model(chunk)
-        sims = sim_matrix_training(text_features, pooled, pooling_type)
-        loss = loss_fn(sims, model.clip.logit_scale) * (batch_size_of(chunk) / total)
-        loss.backward()
-        loss_sum += float(loss.detach())
-    return loss_sum
+    return float(chunk_accumulation_backward(
+        model, loss_fn, data, chunk_size, pooling_type, before_pool=before_pool
+    ))
 
 
 @torch.no_grad()

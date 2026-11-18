@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-from config.base_config import Config
+from config.base_config import Config, HF_CLIP_MODEL
 from modules.transformer import Transformer
 
 class CLIPTransformer(nn.Module):
@@ -10,7 +10,7 @@ class CLIPTransformer(nn.Module):
         
         if self.config.huggingface:
             from transformers import CLIPModel
-            self.clip = CLIPModel.from_pretrained("openai/clip-vit-base-patch32")
+            self.clip = CLIPModel.from_pretrained(getattr(config, 'clip_model_path', None) or HF_CLIP_MODEL)
         else:
             from model.clip_model import load_clip
             self.clip = load_clip(config.clip_arch)

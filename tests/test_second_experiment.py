@@ -13,7 +13,7 @@ from torch import nn
 from torch.utils.data import Dataset
 
 from datasets.data_factory import DataFactory
-from modules.grad_cache import grad_cache_backward
+from modules.grad_cache import accumulation_backward, grad_cache_backward, split_batch
 from modules.loss import CLIPLoss
 from modules.metrics import sim_matrix_training
 from modules.optimization import AdamW
@@ -69,12 +69,13 @@ def make_batch(count=6):
     }
 
 
-def make_trainer(directory, chunk_size):
+def make_trainer(directory, chunk_size, accumulation_chunk_size=0):
     config = SimpleNamespace(
         model_path=str(directory), dataset_name='TOY', msrvtt_train_file='9k',
         num_frames=3, video_sample_type='uniform', input_res=224,
         arch='clip_transformer', huggingface=True, clip_arch='ViT-B/32',
         embed_dim=8, loss='clip', batch_size=6, grad_cache_chunk_size=chunk_size,
+        accumulation_chunk_size=accumulation_chunk_size,
         grad_cache_check_recompute=True, eval_batch_size=2, num_epochs=2,
         clip_lr=0.0005, noclip_lr=0.0005, weight_decay=0.2,
         warmup_proportion=0.1, seed=24, num_mha_heads=1,
@@ -156,6 +157,61 @@ class SecondExperimentTests(unittest.TestCase):
                                      'transformer', device=torch.device('cpu'))
         self.assertEqual(report['num_chunks'], 3)
         self.assertTrue(torch.isfinite(report['loss']))
+
+    def test_accumulation_matches_weighted_independent_losses_with_short_tail(self):
+        model = TinyModel().train()
+        reference = copy.deepcopy(model)
+        data = make_batch(5)
+        loss_fn = CLIPLoss()
+        torch.manual_seed(42)
+        losses = []
+        for chunk in split_batch(data, 3):
+            text, pooled = reference(chunk)
+            scores = sim_matrix_training(text, pooled, 'transformer')
+            losses.append(loss_fn(scores, reference.clip.logit_scale))
+        expected = (3 * losses[0] + 2 * losses[1]) / 5
+        expected.backward()
+
+        torch.manual_seed(42)
+        result = accumulation_backward(model, loss_fn, data, 3, 'transformer', device='cpu')
+        torch.testing.assert_allclose(result, expected.detach())
+        for actual, desired in zip(model.parameters(), reference.parameters()):
+            torch.testing.assert_allclose(actual.grad, desired.grad, atol=1e-6, rtol=1e-5)
+
+    def test_accumulation_updates_once_and_rejects_incompatible_resume(self):
+        with tempfile.TemporaryDirectory() as folder:
+            directory = Path(folder)
+            trainer = make_trainer(directory, chunk_size=0, accumulation_chunk_size=2)
+            trainer.lr_scheduler = torch.optim.lr_scheduler.StepLR(trainer.optimizer, step_size=1)
+            before_step = trainer.lr_scheduler.last_epoch
+            trainer.train()
+            self.assertEqual(trainer.lr_scheduler.last_epoch, before_step + 1)
+            path = directory / 'checkpoint-last.pth'
+            checkpoint = load_checkpoint(path)
+            self.assertEqual(checkpoint['global_step'], 1)
+            self.assertEqual(checkpoint['data_state']['next_batch'], 1)
+            self.assertEqual({int(value['step']) for value in checkpoint['optimizer']['state'].values()}, {1})
+            self.assertEqual(checkpoint['training_settings']['accumulation_chunk_size'], 2)
+            with self.assertRaisesRegex(ValueError, 'accumulation_chunk_size'):
+                make_trainer(directory, chunk_size=0).load_checkpoint(str(path), resume_training=True)
+            del checkpoint['training_settings']['accumulation_chunk_size']
+            torch.save(checkpoint, path)
+            with self.assertRaisesRegex(ValueError, 'accumulation_chunk_size'):
+                trainer.load_checkpoint(str(path), resume_training=True)
+
+    def test_session_starts_fresh_then_selects_its_own_checkpoint(self):
+        from run_training_session import select_checkpoint
+
+        with tempfile.TemporaryDirectory() as folder:
+            directory = Path(folder)
+            (directory / '.session.lock').touch()
+            self.assertIsNone(select_checkpoint(directory, None))
+            (directory / 'training.log').touch()
+            with self.assertRaisesRegex(ValueError, 'no checkpoint-last'):
+                select_checkpoint(directory, None)
+            latest = directory / 'checkpoint-last.pth'
+            latest.touch()
+            self.assertEqual(select_checkpoint(directory, None), latest)
 
 
 class SecondExperimentSummaryTests(unittest.TestCase):

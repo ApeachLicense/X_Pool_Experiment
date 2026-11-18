@@ -3,6 +3,7 @@ import torch
 import random
 import numpy as np
 from config.all_config import AllConfig
+from config.base_config import HF_CLIP_MODEL
 from torch.utils.tensorboard.writer import SummaryWriter
 from datasets.data_factory import DataFactory
 from model.model_factory import ModelFactory
@@ -30,7 +31,9 @@ def main():
 
     if config.huggingface:
         from transformers import CLIPTokenizer
-        tokenizer = CLIPTokenizer.from_pretrained("openai/clip-vit-base-patch32", TOKENIZERS_PARALLELISM=False)
+        tokenizer = CLIPTokenizer.from_pretrained(
+            config.clip_model_path or HF_CLIP_MODEL, TOKENIZERS_PARALLELISM=False
+        )
     else:
         from modules.tokenization_clip import SimpleTokenizer
         tokenizer = SimpleTokenizer()

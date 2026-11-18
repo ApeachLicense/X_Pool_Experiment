@@ -27,13 +27,14 @@ class AllConfig(Config):
         parser.add_argument('--save_every', type=int, default=1, help="Save model every n epochs")
         parser.add_argument('--log_step', type=int, default=10, help="Print training log every n steps")
         parser.add_argument('--evals_per_epoch', type=int, default=10, help="Number of times to evaluate per epoch")
-        parser.add_argument('--eval_batch_size', type=int, default=None, help='Validation batch size; default 4 with GradCache, else train batch size')
+        parser.add_argument('--eval_batch_size', type=int, default=None, help='Validation batch size; defaults to at most 4 with chunked training')
         parser.add_argument('--load_epoch', type=int, help="Epoch to load from exp_name, or -1 to load model_best.pth")
         parser.add_argument('--eval_window_size', type=int, default=5, help="Size of window to average metrics")
         parser.add_argument('--metric', type=str, default='t2v', help="'t2v'/'v2t'")
 
         # model parameters
         parser.add_argument('--huggingface', action='store_true', default=False)
+        parser.add_argument('--clip_model_path', help='Local Hugging Face CLIP model and tokenizer directory')
         parser.add_argument('--arch', type=str, default='clip_transformer')
         parser.add_argument('--clip_arch', type=str, default='ViT-B/32', help="CLIP arch. only when not using huggingface")
         parser.add_argument('--embed_dim', type=int, default=512, help="Dimensionality of the model embedding")
@@ -44,6 +45,7 @@ class AllConfig(Config):
         parser.add_argument('--noclip_lr', type=float, default=1e-5, help='Learning rate used for new params')
         parser.add_argument('--batch_size', type=int, default=32)
         parser.add_argument('--grad_cache_chunk_size', type=int, default=0, help='0: off; otherwise effective batch is encoded in chunks of this size')
+        parser.add_argument('--accumulation_chunk_size', type=int, default=0, help='0: off; otherwise compute an independent contrastive loss per chunk and update once per effective batch')
         parser.add_argument('--grad_cache_check_recompute', action='store_true', help='Verify deterministic feature recomputation every step (slower)')
         parser.add_argument('--num_epochs', type=int, default=5)
         parser.add_argument('--weight_decay', type=float, default=0.2, help='Weight decay')
@@ -71,10 +73,23 @@ class AllConfig(Config):
             parser.error('--batch_size must be positive')
         if not 0 <= args.grad_cache_chunk_size <= args.batch_size:
             parser.error('--grad_cache_chunk_size must be 0 (off) or in [1, batch_size]')
+        if not 0 <= args.accumulation_chunk_size <= args.batch_size:
+            parser.error('--accumulation_chunk_size must be 0 (off) or in [1, batch_size]')
+        if args.grad_cache_chunk_size and args.accumulation_chunk_size:
+            parser.error('GradCache and independent-loss accumulation are mutually exclusive')
+        if args.grad_cache_check_recompute and not args.grad_cache_chunk_size:
+            parser.error('--grad_cache_check_recompute requires GradCache')
+        if args.clip_model_path:
+            if not args.huggingface:
+                parser.error('--clip_model_path requires --huggingface')
+            args.clip_model_path = os.path.abspath(os.path.expanduser(args.clip_model_path))
+            if not os.path.isdir(args.clip_model_path):
+                parser.error(f'CLIP model directory not found: {args.clip_model_path}')
         if args.grad_cache_chunk_size and (not args.huggingface or args.arch != 'clip_transformer'):
             parser.error('GradCache requires --huggingface --arch=clip_transformer')
         if args.eval_batch_size is None:
-            args.eval_batch_size = min(args.batch_size, 4) if args.grad_cache_chunk_size else args.batch_size
+            chunked = args.grad_cache_chunk_size or args.accumulation_chunk_size
+            args.eval_batch_size = min(args.batch_size, 4) if chunked else args.batch_size
         if args.eval_batch_size <= 0:
             parser.error('--eval_batch_size must be positive')
         if args.max_train_seconds < 0 or not math.isfinite(args.max_train_seconds) or args.max_train_steps < 0:

@@ -62,6 +62,26 @@ def move_batch(data, device):
     return moved
 
 
+def accumulation_backward(model, loss_fn, data, chunk_size, pooling_type,
+                          device=None, before_pool=None):
+    """Backpropagate the example-weighted mean of independent chunk losses."""
+    total = batch_size_of(data)
+    if total == 0:
+        raise ValueError('Cannot accumulate gradients from an empty batch')
+    if before_pool is not None:
+        before_pool()
+    total_loss = 0.0
+    for chunk in split_batch(data, chunk_size):
+        if device is not None:
+            chunk = move_batch(chunk, device)
+        text, pooled = model(chunk)
+        similarities = sim_matrix_training(text, pooled, pooling_type)
+        loss = loss_fn(similarities, model.clip.logit_scale) * (batch_size_of(chunk) / total)
+        loss.backward()
+        total_loss = total_loss + loss.detach()
+    return total_loss
+
+
 def grad_cache_backward(model, loss_fn, data, chunk_size, pooling_type,
                         device=None, before_pool=None, check_recompute=True):
     """Accumulate into ``.grad`` the gradient of one loss over the whole batch.

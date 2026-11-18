@@ -18,7 +18,9 @@ PowerShell에서 이 파일이 있는 `xpool` 폴더로 이동한 뒤 실행합�
 
 기본 설정은 MSR-VTT 9K, 배치 4, FP32, 12프레임, 224×224, 데이터 작업자 2개입니다. 학습 중 평가는 꺼져 있습니다. GPU 점유와 온도는 5초 간격으로 기록합니다.
 
-첫 실행은 기존 6시간 실험의 `outputs/msrvtt9k_train_vram_20261107_054714/checkpoint-epoch2.pth`에서 62,216스텝과 optimizer·학습률을 복원합니다. 이후 실행은 `outputs/msrvtt9k_split_training/checkpoint-last.pth`를 자동으로 선택합니다. 다른 파일을 지정할 때는 `--resume 경로`를 추가합니다.
+당시 첫 실행은 기존 6시간 실험의 `outputs/msrvtt9k_train_vram_20261107_054714/checkpoint-epoch2.pth`에서 62,216스텝과 optimizer·학습률을 복원했습니다. 현재 실행기는 같은 실험 폴더의 `checkpoint-last.pth`를 자동으로 선택하며, 새 폴더에서는 기본 CLIP으로 시작합니다. 초기 6시간 파일부터 다시 이어갈 때는 배치 4 조건과 새 실험명을 사용하고 `--resume 경로`를 명시합니다.
+
+GradCache-32는 `--batch-size 32 --grad-cache-chunk-size 4`, 누적-32는 `--batch-size 32 --accumulation-chunk-size 4`를 사용합니다. 이 두 조건은 각기 다른 실험명을 사용하고 재개할 때도 같은 설정을 전달합니다. 자세한 실행 예시는 [second experiment 계획](SECOND_EXPERIMENT.md)에 있습니다.
 
 기존 6시간 체크포인트에는 당시 셔플과 난수 상태가 없습니다. 따라서 첫 재개부터 seed 24에 따른 epoch별 셔플과 샘플별 증강 규칙을 적용합니다. 중단된 2번째 epoch의 17,216개 완료 배치 다음 위치부터 진행하며, 첫 재개 이후 데이터 순서는 이전 6시간 실행의 순서와 달라질 수 있습니다.
 

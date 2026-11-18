@@ -24,6 +24,9 @@ class TrainingProfile:
         self.examples = 0
         self.loss_sum = 0.0
         self.last_loss = None
+        self.video_id_steps = 0
+        self.duplicate_video_batches = 0
+        self.duplicate_negative_batches = 0
         self.stop_reason = None
         self.output_dir = Path(config.model_path)
         session_id = datetime.now(timezone.utc).strftime('%Y%m%d_%H%M%S_%f')
@@ -38,12 +41,13 @@ class TrainingProfile:
             "elapsed_seconds", "step", "epoch", "batch_index", "batch_size", "loss",
             "step_seconds", "allocated_mib", "reserved_mib", "peak_allocated_mib",
             "peak_reserved_mib", "clip_lr", "noclip_lr",
+            "duplicate_video_batch", "duplicate_negative_batch",
         ])
         if self.device.type == "cuda":
             torch.cuda.reset_peak_memory_stats(self.device)
         self.write_report("running")
 
-    def record_step(self, epoch, batch_index, batch_size, loss, optimizer):
+    def record_step(self, epoch, batch_index, batch_size, loss, optimizer, *, video_ids=None):
         now = time.monotonic()
         elapsed = now - self.started
         if not math.isfinite(loss):
@@ -52,6 +56,18 @@ class TrainingProfile:
         self.examples += batch_size
         self.loss_sum += loss
         self.last_loss = loss
+        duplicate_video = duplicate_negative = ""
+        if video_ids is not None:
+            ids = list(video_ids.tolist() if torch.is_tensor(video_ids) else video_ids)
+            width = getattr(self.config, "accumulation_chunk_size", 0) or batch_size
+            duplicate_video = int(len(set(ids)) < len(ids))
+            duplicate_negative = int(any(
+                len(set(group)) < len(group)
+                for group in (ids[start:start + width] for start in range(0, len(ids), width))
+            ))
+            self.video_id_steps += 1
+            self.duplicate_video_batches += duplicate_video
+            self.duplicate_negative_batches += duplicate_negative
         memory = self.memory()
         self.writer.writerow([
             round(elapsed, 6), self.initial_global_step + self.steps, epoch, batch_index, batch_size, loss,
@@ -59,6 +75,7 @@ class TrainingProfile:
             memory["allocated_mib"], memory["reserved_mib"],
             memory["peak_allocated_mib"], memory["peak_reserved_mib"],
             optimizer.param_groups[0]["lr"], optimizer.param_groups[1]["lr"],
+            duplicate_video, duplicate_negative,
         ])
         self.file.flush()
         self.previous_step = now
@@ -102,8 +119,14 @@ class TrainingProfile:
             "training_pairs_per_epoch": self.dataset_size,
             "batch_size": self.config.batch_size,
             "grad_cache_chunk_size": getattr(self.config, "grad_cache_chunk_size", 0),
+            "accumulation_chunk_size": getattr(self.config, "accumulation_chunk_size", 0),
             "eval_batch_size": getattr(self.config, "eval_batch_size", self.config.batch_size),
+            "video_id_steps": self.video_id_steps,
+            "duplicate_video_batches": self.duplicate_video_batches,
+            "duplicate_negative_batches": self.duplicate_negative_batches,
             "precision": "float32",
+            "tf32_matmul": torch.backends.cuda.matmul.allow_tf32,
+            "tf32_cudnn": torch.backends.cudnn.allow_tf32,
             "device": str(self.device),
             "num_frames": self.config.num_frames,
             "input_resolution": self.config.input_res,

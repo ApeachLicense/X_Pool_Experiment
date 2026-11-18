@@ -23,6 +23,7 @@ RTX 3060 Ti 8GiB에서 X-Pool의 공식 평가 재현, VRAM 측정, 시간 제�
 - [최종 체크포인트 검증 기록](results/msrvtt9k_split_training/checkpoint_verification.json)
 - [분할 실행 설명](RESUME_TRAINING.md)
 - [긴 학습 전 사전 확인 3종: GradCache 동등성, step 시간, feature drift](FIRST_EXPERIMENT.md)
+- [GradCache-32·누적-32 비교 계획과 실행법](SECOND_EXPERIMENT.md)
 - [전체 공개 기록 목록과 SHA-256](results/artifact_manifest.json)
 
 ## 코드 출처
@@ -48,7 +49,7 @@ MSR-VTT 영상은 `data/MSRVTT/vids/`에 별도로 준비해야 합니다. 사�
 .\.venv\Scripts\python.exe evaluate_local.py
 ```
 
-새 학습, 중단 후 재개, 최종 모델 평가 명령은 [보고서의 재현 절차](report.md#재현-절차)에 있습니다. 분할 실행기는 기존 체크포인트가 필요하므로 빈 저장소에서 곧바로 `run_training_session.py`를 실행하지 말고 먼저 새 학습을 시작해야 합니다.
+새 학습, 중단 후 재개, 최종 모델 평가 명령은 [보고서의 재현 절차](report.md#재현-절차)에 있습니다. 분할 실행기는 새 실험 폴더에서는 기본 CLIP으로 시작하고, 이후 같은 폴더의 `checkpoint-last.pth`에서 재개합니다. 배치 32의 실행 명령은 [second experiment 계획](SECOND_EXPERIMENT.md)에 있습니다.
 
 ## 공개 파일 범위
 

@@ -22,21 +22,31 @@ def write_json(path, value):
     temporary.replace(path)
 
 
-def training_command(name, batch_size, seconds, steps, resume=None):
+def training_command(name, batch_size, seconds, steps, resume=None, *,
+                     videos_dir="data/MSRVTT/vids", clip_model_path=None,
+                     grad_cache_chunk_size=0, accumulation_chunk_size=0,
+                     check_recompute=False, seed=24, log_step=100):
     command = [
         sys.executable, "-u", "train.py", f"--exp_name={name}",
-        "--videos_dir=data/MSRVTT/vids", "--dataset_name=MSRVTT", "--msrvtt_train_file=9k",
+        f"--videos_dir={videos_dir}", "--dataset_name=MSRVTT", "--msrvtt_train_file=9k",
         f"--batch_size={batch_size}", "--num_workers=2", "--huggingface", "--no_tensorboard",
+        f"--grad_cache_chunk_size={grad_cache_chunk_size}",
+        f"--accumulation_chunk_size={accumulation_chunk_size}", f"--eval_batch_size={min(batch_size, 4)}",
+        f"--seed={seed}",
         "--noclip_lr=3e-5", "--transformer_dropout=0.3", "--evals_per_epoch=0",
-        "--log_step=100", "--profile_training",
+        f"--log_step={log_step}", "--profile_training",
         f"--max_train_seconds={seconds}", f"--max_train_steps={steps}",
     ]
     if resume is not None:
         command.append(f'--resume={resume}')
+    if clip_model_path is not None:
+        command.append(f'--clip_model_path={clip_model_path}')
+    if check_recompute:
+        command.append('--grad_cache_check_recompute')
     return command
 
 
-def run_training(name, batch_size, seconds, steps, resume=None):
+def run_training(name, batch_size, seconds, steps, resume=None, **training_options):
     output = ROOT / "outputs" / name
     output.mkdir(parents=True, exist_ok=True)
     session_id = datetime.now(timezone.utc).strftime('monitor_%Y%m%d_%H%M%S_%f')
@@ -48,7 +58,7 @@ def run_training(name, batch_size, seconds, steps, resume=None):
         log_path = session_output / 'training.log'
     if gpu_path.exists():
         gpu_path = session_output / 'gpu_samples.csv'
-    command = training_command(name, batch_size, seconds, steps, resume)
+    command = training_command(name, batch_size, seconds, steps, resume, **training_options)
     environment = dict(os.environ, PYTHONUTF8="1", TOKENIZERS_PARALLELISM="false")
     environment["HF_HOME"] = str(ROOT / ".cache" / "huggingface")
     environment["TRANSFORMERS_CACHE"] = str(ROOT / ".cache" / "transformers")
@@ -91,7 +101,7 @@ def run_training(name, batch_size, seconds, steps, resume=None):
                     summary["gpu_samples"] += 1
                     summary["gpu_peak_used_mib"] = max(summary["gpu_peak_used_mib"], values[0])
                     summary["gpu_max_temperature_c"] = max(summary["gpu_max_temperature_c"], values[3])
-                except (subprocess.SubprocessError, ValueError) as error:
+                except (OSError, subprocess.SubprocessError, StopIteration, ValueError) as error:
                     summary["telemetry_errors"].append(str(error))
                 summary["wall_time_seconds"] = round(elapsed, 3)
                 summary["updated_at_utc"] = datetime.now(timezone.utc).isoformat()
