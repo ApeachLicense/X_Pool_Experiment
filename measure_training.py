@@ -110,7 +110,7 @@ def run_training(name, batch_size, seconds, steps, resume=None, **training_optio
                 if time.monotonic() - last_progress >= 300:
                     print(f"{name} running {elapsed/3600:.2f} h, peak GPU {summary['gpu_peak_used_mib']:.0f} MiB", flush=True)
                     last_progress = time.monotonic()
-                if elapsed > seconds + 600:
+                if seconds > 0 and elapsed > seconds + 600:
                     subprocess.run(["taskkill", "/PID", str(process.pid), "/T", "/F"], check=True)
                     summary["supervisor_timeout"] = True
                     break

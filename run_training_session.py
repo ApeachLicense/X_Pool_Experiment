@@ -1,4 +1,4 @@
-"""Start or continue an MSR-VTT training run with a per-session time limit."""
+"""Start or continue an MSR-VTT training run with optional session limits."""
 
 import argparse
 import ctypes
@@ -37,7 +37,8 @@ def select_checkpoint(output, requested):
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--hours', type=float, required=True, help='Wall-time budget for this session')
+    parser.add_argument('--hours', type=float, required=True,
+                        help='Wall-time budget for this session (0 disables the time limit)')
     parser.add_argument('--exp-name', default='msrvtt9k_split_training')
     parser.add_argument('--resume', type=Path, help='Explicit checkpoint for a new output directory')
     parser.add_argument('--batch-size', type=int, default=4)
@@ -53,8 +54,8 @@ def main(argv=None):
     parser.add_argument('--dry-run', action='store_true', help='Print the resolved command without training')
     args = parser.parse_args(argv)
     seconds = args.hours * 3600
-    if not math.isfinite(seconds) or seconds <= 0:
-        parser.error('--hours must be finite and positive')
+    if not math.isfinite(seconds) or seconds < 0:
+        parser.error('--hours must be finite and nonnegative')
     if not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_.-]*', args.exp_name):
         parser.error('--exp-name must be a single directory name')
     if args.batch_size <= 0 or not all(
