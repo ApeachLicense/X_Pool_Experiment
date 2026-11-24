@@ -1,8 +1,10 @@
 # X-Pool 실험 진행 보고서
 
-2026년 11월 22일 기준 · `second-experiment` · MSR-VTT text-to-video retrieval
+2026년 11월 24일 기준 · `second-experiment` · MSR-VTT text-to-video retrieval
 
-RTX 3060 Ti 8GiB 한 장에서 **GradCache-32와 누적-32 모두 5 epochs를 완료**했다. 같은 seed 24의 최종 체크포인트에서 GradCache-32의 **R@1은 45.4%, 누적-32는 43.1%**였다. 데이터 순서와 optimizer 업데이트 스케줄을 맞춘 비교에서 GradCache-32가 **2.3%p** 앞섰다. 현재 확인한 범위는 seed 24 한 쌍이다.
+RTX 3060 Ti 8GiB 한 장에서 seed 24의 **GradCache-32와 누적-32 모두 5 epochs를 완료**했다. 최종 R@1은 **45.4% 대 43.1%**로, 데이터 순서와 optimizer 업데이트 스케줄을 맞춘 비교에서 GradCache-32가 **2.3%p** 앞섰다.
+
+Seed 25의 **GradCache-32도 5 epochs를 완료**했다. 누적-32 학습과 두 모델의 1K-A 평가는 남아 있다.
 
 ## 출발점과 사전 확인
 
@@ -43,7 +45,7 @@ Proposal 피드백은 contrastive learning에서 optimizer 업데이트 주기�
 
 ## MSR-VTT 1K-A 최종 평가
 
-자체 배치 32 두 조건은 학습 중 1K-A 평가를 끈 상태로 실행했다. 각각 고정된 5번째 epoch 체크포인트를 동일한 1K-A에서 한 번 평가했다. 배치 4와 공식 가중치 수치는 이전에 측정한 참고 결과다.
+Seed 24의 두 배치 32 조건은 학습 중 1K-A 평가를 끈 상태로 실행했다. 각각 고정된 5번째 epoch 체크포인트를 동일한 1K-A에서 한 번 평가했다. 배치 4와 공식 가중치 수치는 이전에 측정한 참고 결과다.
 
 | 조건 | R@1 | R@5 | R@10 | MedR | MeanR |
 | --- | ---: | ---: | ---: | ---: | ---: |
@@ -54,13 +56,29 @@ Proposal 피드백은 contrastive learning에서 optimizer 업데이트 주기�
 
 Seed 24에서 GradCache-32는 누적-32보다 **R@1 +2.3%p, R@5 +2.1%p, R@10 +0.9%p**였다. MedR은 같고, 평균 순위는 누적-32가 소폭 낮았다. GradCache-32는 이전 자체 배치 4보다 R@1이 **5.5%p 높았다**. 배치 4와는 업데이트 수와 학습률 스케줄도 달랐고 이전 실행 중 셔플 방식 변경이 있었다. 공식 가중치의 구체적인 모델 선택 과정은 확인하지 못했으므로 46.9%는 재현한 공식 참고값으로 둔다.
 
+## Seed 25 GradCache-32 학습 결과
+
+커밋 `c4a0a1e`에서 기본 CLIP 가중치로 새로 시작했다. 배치 32, GradCache chunk 4, matmul·cuDNN TF32 허용, `evals_per_epoch=0`을 6개 세션에서 유지했다. 시간 또는 스텝 한도에서 체크포인트를 저장한 뒤 같은 실험 폴더에서 이어갔다.
+
+| 세션 | 종료 시각 (KST) | 시작 → 종료 update | 프로세스 시간 | 장치 VRAM 최대 |
+| ---: | --- | ---: | ---: | ---: |
+| 1 | 11월 22일 23:28:22 | 0 → 1,707 | 1:24:27 | 7,659 MiB |
+| 2 | 11월 23일 20:51:02 | 1,707 → 14,290 | 9:48:33 | 7,251 MiB |
+| 3 | 11월 23일 21:58:52 | 14,290 → 15,724 | 1:07:49 | 6,805 MiB |
+| 4 | 11월 23일 22:53:14 | 15,724 → 16,875 | 0:54:21 | 6,780 MiB |
+| 5 | 11월 24일 01:45:11 | 16,875 → 18,237 | 1:08:32 | 7,390 MiB |
+| 6 | 11월 24일 20:16:17 | 18,237 → 28,125 | 7:34:04 | 7,834 MiB |
+
+6개 세션은 모두 정상 종료했고, 학습 로그에서 **1–28,125스텝이 연속**이며 모든 loss 값이 유한함을 확인했다. 총 노출량은 **900,000쌍**이다. 마지막 `checkpoint-epoch5.pth`를 열어 `epoch=5`, `global_step=28125`, `partial_epoch=false`를 확인했다.
+
+로딩·재개·저장을 포함한 프로세스 시간 합계는 **21시간 57분 46초**다. PyTorch의 최대 allocated는 **4,434.7 MiB**, 최대 reserved는 **4,798 MiB**였다. 데스크톱을 포함한 장치 전체의 샘플링 최대치는 **7,834 / 8,192 MiB**였다. 메모리 오류와 GPU 수집 오류는 관측되지 않았다.
+
 ## 다음 판정에 필요한 결과
 
 Seed 25에서 **GradCache-32가 누적-32보다 R@1이 높은 방향이 재현되는지** 확인한다. 두 seed의 차이가 각각 양수이고 평균이 **+1.0%p 이상**이면 사전에 정한 기준을 통과한다. 예를 들어 seed 25에서 +0.3%p이면 seed 24의 +2.3%p와 평균이 +1.3%p로 통과한다. Seed 25 차이가 0.0%p이면 양수 조건을 충족하지 않는다. 결과에는 seed별 실제 차이와 평균을 함께 기록한다. [사전 판정 기준](SECOND_EXPERIMENT.md#비교-설계)
 
-- **학습.** 학습 로직은 seed 24와 동일하고, 장시간 재개용 실행기 변경은 커밋 `759b9c5`에 기록했다. 두 조건 모두 기존 CLIP 초기화, seed 25, effective batch 32, chunk 4, matmul·cuDNN TF32 플래그 켜짐, `evals_per_epoch=0`을 유지한다. `gradcache32_full_s25`와 `accum32_full_s25`를 각각 새로 시작한다.
-- **첫 10시간 세션.** GradCache-32에 `--hours 9.8`(9시간 48분)을 배정하고 나머지 시간은 시작 준비와 저장에 남긴다. Seed 24 속도 기준으로 2 epochs 완료 후 epoch 3에서 약 1,500–1,600 updates를 더 진행할 것으로 예상한다. 종료 시 저장한 `checkpoint-last.pth`로 이어가며, 이후 GradCache-32는 약 11시간 반, 누적-32는 약 20시간의 학습이 남는다. Seed 24의 질의별 비교는 두 최종 모델의 추론에 약 4–6분이 걸릴 것으로 예상하며, 당일 여유 시간에 진행할 수 있다.
-- **완료 확인과 평가.** 두 조건이 각각 28,125 updates를 완료하면 5개 epoch의 셔플 순열과 전체 업데이트의 CLIP·pooling 학습률 기록이 일치하는지 대조한다. 두 학습이 모두 끝난 뒤 각 epoch 5 최종 체크포인트를 1K-A에서 한 번씩 평가한다.
+- **누적-32 학습.** `accum32_full_s25`는 시작 전이다. 같은 CLIP 초기화와 seed 25, 배치 32, 누적 chunk 4, TF32 플래그, `evals_per_epoch=0`으로 5 epochs를 학습한다. Seed 24에서 같은 조건의 실행 시간은 **20시간 6분 27초**였다.
+- **완료 확인과 평가.** 누적-32도 28,125 updates를 완료하면 두 실행의 5개 epoch 셔플 순열과 전체 업데이트의 CLIP·pooling 학습률 기록이 일치하는지 대조한다. 두 모델의 epoch 5 최종 체크포인트는 그 뒤 1K-A에서 한 번씩 평가한다. 현재 seed 25의 R@1은 두 조건 모두 미측정이다.
 
 전체 배치 변경의 효과까지 분리하려면 현재 코드로 조건을 맞춘 배치 4 실행도 필요하다. 새 학습 설정을 고르는 실험은 별도 내부 검증셋에서 수행한다.
 
@@ -68,9 +86,10 @@ Seed 25에서 **GradCache-32가 누적-32보다 R@1이 높은 방향이 재현�
 
 아래 경로는 실험을 실행한 PC에서 이 저장소 루트를 기준으로 한 위치다. 세션별 `monitor_report.json`, `training_profile.json`, `training_steps.csv`와 체크포인트는 로컬 `outputs/`에 있다.
 
-| 결과 | 평가 기록 | 체크포인트 SHA-256 |
+| 결과 | 평가 또는 학습 기록 | 체크포인트 SHA-256 |
 | --- | --- | --- |
-| GradCache-32 epoch 5 | `outputs/sequence_20261121_s24/gradcache_final_evaluation.json` | `aa341c4d7b9dbcdf19446f0f6a7a9e57b23c2332aee2e8e70f4b4b2220786697` |
-| 누적-32 epoch 5 | `outputs/sequence_20261122_s24/accum32_final_evaluation.json` | `0d45d954fe8b5938d16ea98e1da758aa4cba556ee4959991fc39b40fa3ae45f5` |
+| GradCache-32 seed 24 epoch 5 | `outputs/sequence_20261121_s24/gradcache_final_evaluation.json` | `aa341c4d7b9dbcdf19446f0f6a7a9e57b23c2332aee2e8e70f4b4b2220786697` |
+| 누적-32 seed 24 epoch 5 | `outputs/sequence_20261122_s24/accum32_final_evaluation.json` | `0d45d954fe8b5938d16ea98e1da758aa4cba556ee4959991fc39b40fa3ae45f5` |
+| GradCache-32 seed 25 epoch 5 | `outputs/gradcache32_full_s25/monitor_report.json` | `79d8b7250520547f0bee7bcf49e0c2f39bb5ee0e025b29666178f748917bbfe3` |
 
 전체 실행 상태와 seed 24 차이는 `outputs/sequence_20261122_s24/workflow.json`에 기록했다. 학습 코드는 브랜치 커밋 `b7bd418`을 기반으로 했으며, 실제 장시간 재개에는 실행기의 시간 제한을 0으로 둘 수 있게 한 로컬 변경과 로컬 실행 스크립트를 사용했다.
