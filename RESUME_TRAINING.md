@@ -1,6 +1,28 @@
-# X-Pool 학습을 두 번에 나누어 실행하기
+# X-Pool 분할 학습과 재개
 
-PowerShell에서 이 파일이 있는 `xpool` 폴더로 이동한 뒤 실행합니다.
+PowerShell에서 이 파일이 있는 저장소 루트로 이동한 뒤 실행합니다.
+
+## GradCache-32 학습
+
+새 실험에는 배치 32, chunk 4, 새 실험 이름을 지정합니다. 같은 명령을 다시 실행하면 해당 실험의 `checkpoint-last.pth`에서 이어갑니다.
+
+```powershell
+$py = '.\.venv\Scripts\python.exe'
+$run = 'msrvtt9k_gradcache32_s24'
+& $py run_training_session.py --hours 7 --exp-name $run --batch-size 32 --grad-cache-chunk-size 4 --seed 24
+```
+
+세션별 시간은 `--hours`로 조정합니다. `--hours 0`은 시간 제한을 해제하며, 학습은 총 5 epoch에서 종료합니다. `--dry-run`을 붙이면 사용할 경로와 명령을 확인할 수 있습니다. 데이터와 CLIP이 다른 위치에 있으면 각각 `--videos-dir`과 `--clip-model-path`를 지정합니다.
+
+대조군을 재현할 때는 새 실험 이름을 사용하고 `--grad-cache-chunk-size 4` 대신 `--accumulation-chunk-size 4`를 지정합니다. 재개에는 체크포인트와 같은 배치 크기, chunk 설정과 seed가 필요합니다.
+
+최종 체크포인트에서 `global_step=28125`와 `partial_epoch=false`를 확인한 뒤 1K-A를 평가합니다. 아래 경로는 데이터와 CLIP을 저장소 안에 둔 경우의 예입니다.
+
+```powershell
+& $py test.py --exp_name $run --videos_dir data/MSRVTT/vids --clip_model_path openai/clip-vit-base-patch32 --huggingface --dataset_name MSRVTT --msrvtt_train_file 9k --load_epoch 5 --batch_size 4 --eval_batch_size 4 --num_workers 2 --no_tensorboard
+```
+
+## 기존 배치 4 실험
 
 2026년 11월 8일에는 최대 7시간 실행합니다.
 
@@ -18,7 +40,7 @@ PowerShell에서 이 파일이 있는 `xpool` 폴더로 이동한 뒤 실행합�
 
 기본 설정은 MSR-VTT 9K, 배치 4, FP32, 12프레임, 224×224, 데이터 작업자 2개입니다. 학습 중 평가는 꺼져 있습니다. GPU 점유와 온도는 5초 간격으로 기록합니다.
 
-첫 실행은 기존 6시간 실험의 `outputs/msrvtt9k_train_vram_20261107_054714/checkpoint-epoch2.pth`에서 62,216스텝과 optimizer·학습률을 복원합니다. 이후 실행은 `outputs/msrvtt9k_split_training/checkpoint-last.pth`를 자동으로 선택합니다. 다른 파일을 지정할 때는 `--resume 경로`를 추가합니다.
+기존 실험의 `outputs/msrvtt9k_split_training/checkpoint-last.pth`가 있으면 자동으로 선택합니다. 첫 재개 시에는 보관된 6시간 실험의 `outputs/msrvtt9k_train_vram_20261107_054714/checkpoint-epoch2.pth`에서 복원할 수 있습니다. 다른 체크포인트에서 학습하려면 새 실험 이름과 `--resume 경로`를 지정합니다.
 
 기존 6시간 체크포인트에는 당시 셔플과 난수 상태가 없습니다. 따라서 첫 재개부터 seed 24에 따른 epoch별 셔플과 샘플별 증강 규칙을 적용합니다. 중단된 2번째 epoch의 17,216개 완료 배치 다음 위치부터 진행하며, 첫 재개 이후 데이터 순서는 이전 6시간 실행의 순서와 달라질 수 있습니다.
 

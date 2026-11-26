@@ -4,6 +4,7 @@ import torch
 from collections import defaultdict, deque
 from trainer.base_trainer import BaseTrainer
 from modules.metrics import sim_matrix_training, sim_matrix_inference, generate_embeds_per_video_id
+from modules.grad_cache import accumulation_backward, grad_cache_backward
 from tqdm import tqdm
 
 
@@ -24,6 +25,9 @@ class Trainer(BaseTrainer):
         self.tokenizer = tokenizer 
 
         self.pooling_type = config.pooling_type
+        self.grad_cache_chunk_size = getattr(config, 'grad_cache_chunk_size', 0)
+        self.accumulation_chunk_size = getattr(config, 'accumulation_chunk_size', 0)
+        self.grad_cache_check_recompute = getattr(config, 'grad_cache_check_recompute', False)
         self.window_metric = defaultdict(lambda: deque(maxlen=config.eval_window_size))
         self.best_window = -1.0
         self.best = -1.0
@@ -48,18 +52,36 @@ class Trainer(BaseTrainer):
             if self.tokenizer is not None:
                 data['text'] = self.tokenizer(data['text'], return_tensors='pt', padding=True,
                                               truncation=True)
-            if isinstance(data['text'], torch.Tensor):
-                data['text'] = data['text'].to(self.device)
+            if self.grad_cache_chunk_size:
+                # Keep the full effective batch on CPU; only encoder chunks go to CUDA.
+                cache_result = grad_cache_backward(
+                    self.model, self.loss, data, self.grad_cache_chunk_size,
+                    self.pooling_type, device=self.device,
+                    check_recompute=self.grad_cache_check_recompute,
+                )
+                loss = cache_result['loss']
+                recompute_diff = cache_result['feature_recompute_max_abs_diff']
+                if recompute_diff is not None and recompute_diff > 1e-4:
+                    raise RuntimeError(
+                        'GradCache feature recomputation was not deterministic: '
+                        f'max difference={recompute_diff:.6g}'
+                    )
+            elif self.accumulation_chunk_size:
+                loss = accumulation_backward(
+                    self.model, self.loss, data, self.accumulation_chunk_size,
+                    self.pooling_type, device=self.device,
+                )
             else:
-                data['text'] = {key: val.to(self.device) for key, val in data['text'].items()}
-            
-            data['video'] = data['video'].to(self.device)
-
-            text_embeds, video_embeds_pooled = self.model(data)
-            output = sim_matrix_training(text_embeds, video_embeds_pooled, self.pooling_type)
-            
-            loss = self.loss(output, self.model.clip.logit_scale)
-            loss.backward()
+                # Preserve the original full-batch path.
+                if isinstance(data['text'], torch.Tensor):
+                    data['text'] = data['text'].to(self.device)
+                else:
+                    data['text'] = {key: val.to(self.device) for key, val in data['text'].items()}
+                data['video'] = data['video'].to(self.device)
+                text_embeds, video_embeds_pooled = self.model(data)
+                output = sim_matrix_training(text_embeds, video_embeds_pooled, self.pooling_type)
+                loss = self.loss(output, self.model.clip.logit_scale)
+                loss.backward()
             
             torch.nn.utils.clip_grad_norm_(self.model.parameters(), 1.0)
             self.optimizer.step()
@@ -86,7 +108,8 @@ class Trainer(BaseTrainer):
             should_stop = False
             if self.training_profile is not None:
                 should_stop = self.training_profile.record_step(
-                    epoch, batch_idx, data['video'].shape[0], loss.detach().item(), self.optimizer
+                    epoch, batch_idx, data['video'].shape[0], loss.detach().item(),
+                    self.optimizer, video_ids=data.get('video_id'),
                 )
 
             if batch_idx in eval_steps:

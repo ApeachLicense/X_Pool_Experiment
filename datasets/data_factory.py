@@ -21,7 +21,7 @@ class DataFactory:
                 return DataFactory.training_loader(dataset, config)
             else:
                 dataset = MSRVTTDataset(config, split_type, test_img_tfms)
-                return DataLoader(dataset, batch_size=config.batch_size,
+                return DataLoader(dataset, batch_size=getattr(config, 'eval_batch_size', config.batch_size),
                            shuffle=False, num_workers=config.num_workers)
 
         elif config.dataset_name == "MSVD":
@@ -30,7 +30,7 @@ class DataFactory:
                 return DataFactory.training_loader(dataset, config)
             else:
                 dataset = MSVDDataset(config, split_type, test_img_tfms)
-                return DataLoader(dataset, batch_size=config.batch_size,
+                return DataLoader(dataset, batch_size=getattr(config, 'eval_batch_size', config.batch_size),
                         shuffle=False, num_workers=config.num_workers)
             
         elif config.dataset_name == 'LSMDC':
@@ -39,7 +39,7 @@ class DataFactory:
                 return DataFactory.training_loader(dataset, config)
             else:
                 dataset = LSMDCDataset(config, split_type, test_img_tfms)
-                return DataLoader(dataset, batch_size=config.batch_size,
+                return DataLoader(dataset, batch_size=getattr(config, 'eval_batch_size', config.batch_size),
                             shuffle=False, num_workers=config.num_workers)
 
         else:

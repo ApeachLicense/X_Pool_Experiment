@@ -1,6 +1,8 @@
 # X-Pool Experiment on RTX 3060 Ti
 
-RTX 3060 Ti 8GiB에서 X-Pool의 공식 평가 재현, VRAM 측정, 시간 제한 학습과 재개를 검증한 실험 저장소입니다. 실험 기간은 2026년 11월 7–9일입니다.
+RTX 3060 Ti 8GiB에서 X-Pool의 공식 평가 재현, 시간 제한 학습과 재개, GradCache 배치 32 학습을 검증한 실험 저장소입니다.
+
+**8GiB 환경의 배치 32 학습은 GradCache chunk 4를 기준으로 사용합니다.** MSR-VTT 9K의 두 seed에서 각각 5 epochs를 완료했고, 업데이트 수와 학습률을 맞춘 누적-32 대비 1K-A R@1이 평균 **2.2%p** 높았습니다. [GradCache 비교 결과](https://github.com/ApeachLicense/X_Pool_Experiment/blob/second-experiment/from_now_on_report.md)
 
 **공식 체크포인트의 Recall@1 46.9%를 재현했고, 배치 4로 총 225,000 step의 학습 스케줄을 완료했습니다. 직접 학습한 최종 모델의 Recall@1은 39.9%입니다.** 두 결과는 학습 조건이 다르므로 구분해서 사용해야 합니다.
 
@@ -47,7 +49,15 @@ MSR-VTT 영상은 `data/MSRVTT/vids/`에 별도로 준비해야 합니다. 사�
 .\.venv\Scripts\python.exe evaluate_local.py
 ```
 
-새 학습, 중단 후 재개, 최종 모델 평가 명령은 [보고서의 재현 절차](report.md#재현-절차)에 있습니다. 분할 실행기는 기존 체크포인트가 필요하므로 빈 저장소에서 곧바로 `run_training_session.py`를 실행하지 말고 먼저 새 학습을 시작해야 합니다.
+## 8GiB에서 GradCache-32 학습
+
+PowerShell에서 새 실험 이름을 지정해 시작합니다.
+
+```powershell
+.\.venv\Scripts\python.exe run_training_session.py --hours 7 --exp-name msrvtt9k_gradcache32_s24 --batch-size 32 --grad-cache-chunk-size 4 --seed 24
+```
+
+같은 실험 이름과 설정으로 다시 실행하면 `checkpoint-last.pth`에서 이어갑니다. 실행 전에 `--dry-run`으로 데이터 경로와 체크포인트를 확인할 수 있습니다. 실행기는 학습 중 1K-A 평가를 끄며, 최종 체크포인트는 평가 배치 4로 평가합니다. [학습 재개와 평가 명령](RESUME_TRAINING.md)
 
 ## 공개 파일 범위
 

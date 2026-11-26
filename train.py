@@ -4,6 +4,7 @@ import torch
 import random
 import numpy as np
 from config.all_config import AllConfig
+from config.base_config import HF_CLIP_MODEL
 from torch.utils.tensorboard.writer import SummaryWriter
 from datasets.data_factory import DataFactory
 from model.model_factory import ModelFactory
@@ -34,14 +35,19 @@ def main():
 
     if config.huggingface:
         from transformers import CLIPTokenizer
-        tokenizer = CLIPTokenizer.from_pretrained("openai/clip-vit-base-patch32", TOKENIZERS_PARALLELISM=False)
+        tokenizer = CLIPTokenizer.from_pretrained(
+            config.clip_model_path or HF_CLIP_MODEL, TOKENIZERS_PARALLELISM=False
+        )
     else:
         from modules.tokenization_clip import SimpleTokenizer
         tokenizer = SimpleTokenizer()
 
     train_data_loader = DataFactory.get_data_loader(config, split_type='train')
-    valid_data_loader  = DataFactory.get_data_loader(config, split_type='test')
-    model = ModelFactory.get_model(config)
+    valid_data_loader = (
+        DataFactory.get_data_loader(config, split_type='test') if config.evals_per_epoch else None
+    )
+    device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+    model = ModelFactory.get_model(config).to(device)
     
     if config.metric == 't2v':
         metrics = t2v_metrics

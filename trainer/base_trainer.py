@@ -5,7 +5,7 @@ import shutil
 from abc import abstractmethod
 from config.base_config import Config
 from modules.training_profile import TrainingProfile
-from modules.training_state import RESUME_SETTINGS, capture_random_state, restore_random_state
+from modules.training_state import RESUME_DEFAULTS, RESUME_SETTINGS, capture_random_state, restore_random_state
 
 
 class BaseTrainer:
@@ -161,9 +161,19 @@ class BaseTrainer:
             if os.path.isfile(profile_path):
                 with open(profile_path, encoding='utf-8') as handle:
                     saved = json.load(handle).get('settings', {})
+        saved = saved or {}
         for name in RESUME_SETTINGS:
-            if saved and name in saved and getattr(self.config, name) != saved[name]:
-                raise ValueError(f'Resume requires {name}={saved[name]!r}, got {getattr(self.config, name)!r}')
+            if name in RESUME_DEFAULTS:
+                default = RESUME_DEFAULTS[name]
+                expected = saved.get(name, default)
+                actual = getattr(self.config, name, default)
+            elif name in saved:
+                expected = saved[name]
+                actual = getattr(self.config, name)
+            else:
+                continue
+            if actual != expected:
+                raise ValueError(f'Resume requires {name}={expected!r}, got {actual!r}')
 
     def _restore_training_progress(self, checkpoint):
         sampler = self.train_data_loader.batch_sampler
