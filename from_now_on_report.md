@@ -1,10 +1,8 @@
 # X-Pool 실험 진행 보고서
 
-2026년 11월 25일 기준 · `second-experiment` · MSR-VTT text-to-video retrieval
+2026년 11월 26일 기준 · `second-experiment` · MSR-VTT text-to-video retrieval
 
-RTX 3060 Ti 8GiB 한 장에서 seed 24의 **GradCache-32와 누적-32 모두 5 epochs를 완료**했다. 최종 R@1은 **45.4% 대 43.1%**로, 데이터 순서와 optimizer 업데이트 스케줄을 맞춘 비교에서 GradCache-32가 **2.3%p** 앞섰다.
-
-Seed 25의 **GradCache-32는 5 epochs를 완료**했다. 누적-32는 첫 세션에서 **19,298 / 28,125스텝(68.6%)**까지 저장했다. 누적-32의 남은 학습과 두 모델의 1K-A 평가가 남아 있다.
+RTX 3060 Ti 8GiB 한 장에서 **GradCache-32와 누적-32를 seed 24와 25로 각각 5 epochs 학습**하고 최종 1K-A 평가를 마쳤다. 데이터 순서와 optimizer 업데이트 스케줄을 맞춘 비교에서 GradCache-32의 R@1은 두 seed에서 각각 **+2.3%p, +2.1%p** 높았다. 두 차이의 평균은 **+2.2%p**로 사전에 정한 개선 기준을 통과했다.
 
 ## 출발점과 사전 확인
 
@@ -45,16 +43,20 @@ Proposal 피드백은 contrastive learning에서 optimizer 업데이트 주기�
 
 ## MSR-VTT 1K-A 최종 평가
 
-Seed 24의 두 배치 32 조건은 학습 중 1K-A 평가를 끈 상태로 실행했다. 각각 고정된 5번째 epoch 체크포인트를 동일한 1K-A에서 한 번 평가했다. 배치 4와 공식 가중치 수치는 이전에 측정한 참고 결과다.
+Seed 24와 25의 배치 32 학습은 모두 `evals_per_epoch=0`으로 실행했다. 각 실행의 5번째 epoch 최종 체크포인트를 동일한 1K-A에서 한 번 평가했다. 배치 4와 공식 가중치 수치는 이전에 측정한 참고 결과다.
 
 | 조건 | R@1 | R@5 | R@10 | MedR | MeanR |
 | --- | ---: | ---: | ---: | ---: | ---: |
 | GradCache-32, seed 24 | **45.4%** | **72.5%** | **81.6%** | 2.0 | 14.040 |
 | 누적-32, seed 24 | 43.1% | 70.4% | 80.7% | 2.0 | 13.793 |
+| GradCache-32, seed 25 | **46.1%** | **72.9%** | **82.0%** | 2.0 | 14.310 |
+| 누적-32, seed 25 | 44.0% | 70.4% | 80.2% | 2.0 | 14.651 |
 | 기존 자체 배치 4, epoch 5 | 39.9% | 67.7% | 77.7% | 2.0 | 14.002 |
 | 공식 X-Pool 9K 제공 가중치 | 46.9% | 72.8% | 82.2% | 2.0 | 14.291 |
 
 Seed 24에서 GradCache-32는 누적-32보다 **R@1 +2.3%p, R@5 +2.1%p, R@10 +0.9%p**였다. MedR은 같고, 평균 순위는 누적-32가 소폭 낮았다. GradCache-32는 이전 자체 배치 4보다 R@1이 **5.5%p 높았다**. 배치 4와는 업데이트 수와 학습률 스케줄도 달랐고 이전 실행 중 셔플 방식 변경이 있었다. 공식 가중치의 구체적인 모델 선택 과정은 확인하지 못했으므로 46.9%는 재현한 공식 참고값으로 둔다.
+
+Seed 25에서 GradCache-32는 누적-32보다 **R@1 +2.1%p, R@5 +2.5%p, R@10 +1.8%p**였다. MedR은 같고 평균 순위는 GradCache-32가 0.341 낮았다. Seed 25의 두 평가는 합계 **5분** 걸렸고 11월 26일 15:20 KST에 비교를 마쳤다.
 
 ## Seed 25 GradCache-32 학습 결과
 
@@ -73,20 +75,26 @@ Seed 24에서 GradCache-32는 누적-32보다 **R@1 +2.3%p, R@5 +2.1%p, R@10 +0.
 
 로딩·재개·저장을 포함한 프로세스 시간 합계는 **21시간 57분 46초**다. PyTorch의 최대 allocated는 **4,434.7 MiB**, 최대 reserved는 **4,798 MiB**였다. 데스크톱을 포함한 장치 전체의 샘플링 최대치는 **7,834 / 8,192 MiB**였다. 메모리 오류와 GPU 수집 오류는 관측되지 않았다.
 
-## Seed 25 누적-32 학습 경과
+## Seed 25 누적-32 학습 결과
 
-커밋 `00b9f2b`에서 같은 기본 CLIP 가중치로 시작했다. 배치 32, 누적 chunk 4, matmul·cuDNN TF32 허용, `evals_per_epoch=0`으로 실행했다. 첫 세션은 11월 25일 **20:59:02 KST**에 시간 한도로 정상 종료했다.
+커밋 `00b9f2b`에서 같은 기본 CLIP 가중치로 시작하고, 보고서만 갱신한 `037015a`에서 나머지 세션을 재개했다. 배치 32, 누적 chunk 4, matmul·cuDNN TF32 허용, `evals_per_epoch=0`을 유지했다.
 
-`checkpoint-last.pth`를 열어 **19,298스텝**, `epoch=4`, `partial_epoch=true`를 확인했다. 4번째 epoch에서 **2,423 / 5,625스텝(43.1%)**을 수행했다. 스텝 로그는 1–19,298까지 연속이고 모든 loss 값이 유한했다. 총 노출량은 **617,536쌍**이다.
+| 세션 | 종료 시각 (KST) | 시작 → 종료 update | 프로세스 시간 | 장치 VRAM 최대 |
+| ---: | --- | ---: | ---: | ---: |
+| 1 | 11월 25일 20:59:02 | 0 → 19,298 | 14:07:59 | 6,957 MiB |
+| 2 | 11월 25일 22:58:54 | 19,298 → 21,582 | 1:40:56 | 7,009 MiB |
+| 3 | 11월 26일 01:44:48 | 21,582 → 22,849 | 0:58:33 | 7,244 MiB |
+| 4 | 11월 26일 15:14:37 | 22,849 → 28,125 | 3:58:28 | 7,776 MiB |
 
-프로세스 시간은 **14시간 7분 59초**, 장치 VRAM 최대는 **6,957 MiB**였다. PyTorch 최대 allocated는 **4,431.1 MiB**, 최대 reserved는 **4,718 MiB**였다. 첫 세션의 원본 기록은 로컬 `outputs/accum32_full_s25/sessions/monitor_20261124_215100_744265/monitor_report.json`에 있다.
+4개 세션은 모두 정상 종료했다. 학습 로그에서 **1–28,125스텝이 연속**이고 모든 loss 값이 유한함을 확인했다. 총 노출량은 **900,000쌍**이고, 최종 체크포인트는 `epoch=5`, `global_step=28125`, `partial_epoch=false`였다.
 
-## 다음 판정에 필요한 결과
+프로세스 시간 합계는 **20시간 45분 55초**다. PyTorch 최대 allocated는 **4,431.1 MiB**, 최대 reserved는 **4,806 MiB**, 장치 VRAM 최대는 **7,776 / 8,192 MiB**였다. 메모리 오류와 GPU 수집 오류는 관측되지 않았다. 같은 seed에서 GradCache-32는 약 **1시간 12분(5.8%)** 더 걸렸다.
 
-Seed 25에서 **GradCache-32가 누적-32보다 R@1이 높은 방향이 재현되는지** 확인한다. 두 seed의 차이가 각각 양수이고 평균이 **+1.0%p 이상**이면 사전에 정한 기준을 통과한다. 예를 들어 seed 25에서 +0.3%p이면 seed 24의 +2.3%p와 평균이 +1.3%p로 통과한다. Seed 25 차이가 0.0%p이면 양수 조건을 충족하지 않는다. 결과에는 seed별 실제 차이와 평균을 함께 기록한다. [사전 판정 기준](SECOND_EXPERIMENT.md#비교-설계)
+## Seed 25 대조 검증과 최종 판정
 
-- **누적-32 학습.** `accum32_full_s25`의 19,298스텝 체크포인트에서 이어서 남은 **8,827스텝**을 학습한다.
-- **완료 확인과 평가.** 누적-32도 28,125 updates를 완료하면 두 실행의 5개 epoch 셔플 순열과 전체 업데이트의 CLIP·pooling 학습률 기록이 일치하는지 대조한다. 두 모델의 epoch 5 최종 체크포인트는 그 뒤 1K-A에서 한 번씩 평가한다. 현재 seed 25의 R@1은 두 조건 모두 미측정이다.
+두 실행에서 **5개 epoch의 셔플 순열과 28,125스텝의 CLIP·pooling 학습률이 모두 일치**했다. 각 epoch 체크포인트에서 sampler 위치와 optimizer·scheduler의 완료 스텝도 확인했다. 동일 영상의 캡션이 한 32쌍 그룹에 중복된 업데이트는 두 실행 모두 1,442회였고, 실제 loss 그룹 내 중복은 GradCache-32에서 1,442회, 누적-32에서 149회였다.
+
+GradCache-32의 R@1 우위가 **seed 24에서 +2.3%p, seed 25에서 +2.1%p**로 재현됐다. 두 차이가 모두 양수이고 평균 **+2.2%p**가 기준인 +1.0%p 이상이어서 실험의 개선 기준을 통과했다. [사전 판정 기준](SECOND_EXPERIMENT.md#비교-설계)
 
 전체 배치 변경의 효과까지 분리하려면 현재 코드로 조건을 맞춘 배치 4 실행도 필요하다. 새 학습 설정을 고르는 실험은 별도 내부 검증셋에서 수행한다.
 
@@ -98,6 +106,9 @@ Seed 25에서 **GradCache-32가 누적-32보다 R@1이 높은 방향이 재현�
 | --- | --- | --- |
 | GradCache-32 seed 24 epoch 5 | `outputs/sequence_20261121_s24/gradcache_final_evaluation.json` | `aa341c4d7b9dbcdf19446f0f6a7a9e57b23c2332aee2e8e70f4b4b2220786697` |
 | 누적-32 seed 24 epoch 5 | `outputs/sequence_20261122_s24/accum32_final_evaluation.json` | `0d45d954fe8b5938d16ea98e1da758aa4cba556ee4959991fc39b40fa3ae45f5` |
-| GradCache-32 seed 25 epoch 5 | `outputs/gradcache32_full_s25/monitor_report.json` | `79d8b7250520547f0bee7bcf49e0c2f39bb5ee0e025b29666178f748917bbfe3` |
+| GradCache-32 seed 25 epoch 5 | `outputs/sequence_20261126_s25/gradcache32_full_s25_final_evaluation.json` | `79d8b7250520547f0bee7bcf49e0c2f39bb5ee0e025b29666178f748917bbfe3` |
+| 누적-32 seed 25 epoch 5 | `outputs/sequence_20261126_s25/accum32_full_s25_final_evaluation.json` | `2d0c48eb247db1897ab95d004f72b4abdbc708abd46e2d10f6cd3ffd83afd26f` |
 
 전체 실행 상태와 seed 24 차이는 `outputs/sequence_20261122_s24/workflow.json`에 기록했다. 학습 코드는 브랜치 커밋 `b7bd418`을 기반으로 했으며, 실제 장시간 재개에는 실행기의 시간 제한을 0으로 둘 수 있게 한 로컬 변경과 로컬 실행 스크립트를 사용했다.
+
+Seed 25의 학습 집계, 셔플·학습률 검증, 두 평가 결과와 최종 판정은 `outputs/sequence_20261126_s25/workflow.json`에 기록했다.
