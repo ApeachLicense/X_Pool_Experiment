@@ -24,6 +24,7 @@ from collections.abc import Mapping
 import torch
 
 from modules.metrics import sim_matrix_training
+from modules.loss import paired_loss
 
 
 def batch_size_of(data):
@@ -76,7 +77,7 @@ def accumulation_backward(model, loss_fn, data, chunk_size, pooling_type,
             chunk = move_batch(chunk, device)
         text, pooled = model(chunk)
         similarities = sim_matrix_training(text, pooled, pooling_type)
-        loss = loss_fn(similarities, model.clip.logit_scale) * (batch_size_of(chunk) / total)
+        loss = paired_loss(loss_fn, similarities, model.clip.logit_scale, chunk) * (batch_size_of(chunk) / total)
         loss.backward()
         total_loss = total_loss + loss.detach()
     return total_loss
@@ -114,7 +115,7 @@ def grad_cache_backward(model, loss_fn, data, chunk_size, pooling_type,
         before_pool()
     pooled = model.pool(text_features, video_features)
     sims = sim_matrix_training(text_features, pooled, pooling_type)
-    loss = loss_fn(sims, model.clip.logit_scale)
+    loss = paired_loss(loss_fn, sims, model.clip.logit_scale, data)
     loss.backward()
     text_grad, video_grad = text_features.grad, video_features.grad
 

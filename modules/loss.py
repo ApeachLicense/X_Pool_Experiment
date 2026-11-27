@@ -49,10 +49,57 @@ class MarginCLIPLoss(CLIPLoss):
         return super().forward(sims - self.margin * diagonal, logit_scale)
 
 
+class SupConCLIPLoss(CLIPLoss):
+    """Cross-modal adaptation of SupCon (Khosla et al., NeurIPS 2020, Eq. 2).
+
+    Equal video IDs define positives, including the original paired diagonal.
+    Average log-probabilities over positives outside the log, in both directions.
+    No extra encoder, projection head, temperature or inference change.
+    """
+    def forward(self, sims, logit_scale, video_ids=None):
+        if sims.ndim != 2 or sims.shape[0] != sims.shape[1] or sims.shape[0] == 0:
+            raise ValueError('SupCon requires a nonempty square paired similarity matrix')
+        if video_ids is None:
+            raise ValueError('SupCon requires video_id for every pair')
+        if isinstance(video_ids, torch.Tensor):
+            if video_ids.ndim != 1:
+                raise ValueError('video_ids must be one-dimensional')
+            video_ids = video_ids.detach().cpu().tolist()
+        if isinstance(video_ids, (str, bytes)) or len(video_ids) != sims.shape[0]:
+            raise ValueError('SupCon requires one video_id per paired row/column')
+        if any(value is None for value in video_ids):
+            raise ValueError('Missing video_id in SupCon batch')
+
+        # Support string MSR-VTT IDs and numeric IDs without hashing collisions.
+        mapping = {}
+        encoded = [mapping.setdefault(value, len(mapping)) for value in video_ids]
+        if len(mapping) == len(encoded):
+            # Exact legacy loss and gradients if there are no extra positives.
+            return super().forward(sims, logit_scale)
+
+        ids = torch.tensor(encoded, device=sims.device, dtype=torch.long)
+        logits = sims * logit_scale.exp()
+        mask = (ids[:, None] == ids[None, :]).to(dtype=logits.dtype)
+        target_t2v = mask / mask.sum(dim=1, keepdim=True)
+        target_v2t = mask / mask.sum(dim=0, keepdim=True)
+        t2v = -(target_t2v * F.log_softmax(logits, dim=1)).sum(dim=1).mean()
+        v2t = -(target_v2t * F.log_softmax(logits, dim=0)).sum(dim=0).mean()
+        return (t2v + v2t) / 2.0
+
+
+def paired_loss(loss_fn, sims, logit_scale, data):
+    """Pass metadata only to SupCon; preserve existing two-argument losses."""
+    if isinstance(loss_fn, SupConCLIPLoss):
+        return loss_fn(sims, logit_scale, video_ids=data.get('video_id'))
+    return loss_fn(sims, logit_scale)
+
+
 class LossFactory:
     @staticmethod
     def get_loss(config: Config):
         if config.loss == 'clip':
             return CLIPLoss()
+        elif config.loss == 'supcon':
+            return SupConCLIPLoss()
         else:
-            raise NotImplemented
+            raise ValueError(f'Unknown loss: {config.loss}')

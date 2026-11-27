@@ -11,7 +11,7 @@ from torch.utils.data import Dataset
 
 from datasets.data_factory import DataFactory
 from modules.grad_cache import accumulation_backward, grad_cache_backward, split_batch
-from modules.loss import CLIPLoss
+from modules.loss import CLIPLoss, SupConCLIPLoss, LossFactory
 from modules.metrics import sim_matrix_training
 from modules.optimization import AdamW
 from trainer.trainer import Trainer
@@ -126,6 +126,79 @@ class ChunkedTrainingTests(unittest.TestCase):
         for name, parameter in cached.named_parameters():
             rel = (parameter.grad - expected[name]).norm() / expected[name].norm().clamp_min(1e-8)
             self.assertLess(float(rel), 1e-5, name)
+
+    def test_supcon_unique_ids_matches_clip_exactly(self):
+        scores = torch.randn(4, 4, requires_grad=True)
+        scale = torch.tensor(2.0, requires_grad=True)
+        baseline = CLIPLoss()(scores, scale)
+        candidate = SupConCLIPLoss()(scores, scale, ['v0', 'v1', 'v2', 'v3'])
+        self.assertTrue(torch.equal(baseline, candidate))
+        g1 = torch.autograd.grad(baseline, (scores, scale))
+        g2 = torch.autograd.grad(candidate, (scores, scale))
+        for a, b in zip(g1, g2):
+            self.assertTrue(torch.equal(a, b))
+
+    def test_supcon_matches_manual_bidirectional_multi_positive(self):
+        scores = torch.tensor([[1., .6, -.2], [.4, .9, .1], [.2, -.3, .8]],
+                              requires_grad=True)
+        scale = torch.tensor(1.0, requires_grad=True)
+        ids = ['video0', 'video0', 'video1']
+        logits = scores * scale.exp()
+        terms = []
+        for matrix in (logits, logits.t()):
+            for i, vid in enumerate(ids):
+                positive = [j for j, other in enumerate(ids) if vid == other]
+                terms.append(torch.logsumexp(matrix[i], dim=0) - matrix[i, positive].mean())
+        expected = torch.stack(terms).mean()
+        actual = SupConCLIPLoss()(scores, scale, ids)
+        torch.testing.assert_allclose(actual, expected)
+        for a, b in zip(torch.autograd.grad(actual, (scores, scale)),
+                        torch.autograd.grad(expected, (scores, scale))):
+            torch.testing.assert_allclose(a, b)
+        with self.assertRaisesRegex(ValueError, 'video_id'):
+            SupConCLIPLoss()(scores, scale)
+        self.assertIsInstance(LossFactory.get_loss(SimpleNamespace(loss='supcon')), SupConCLIPLoss)
+
+    def test_supcon_gradcache_cross_chunk_positives(self):
+        full = TinyModel().train()
+        cached = copy.deepcopy(full).train()
+        batch = make_batch(5)
+        # Positives deliberately cross chunk boundaries; last chunk has one pair.
+        batch['video_id'] = ['v0', 'v1', 'v0', 'v2', 'v1']
+        loss_fn = SupConCLIPLoss()
+        torch.manual_seed(2026)
+        text, pooled = full(batch)
+        expected = loss_fn(sim_matrix_training(text, pooled, 'transformer'),
+                           full.clip.logit_scale, batch['video_id'])
+        expected.backward()
+        torch.manual_seed(2026)
+        actual = grad_cache_backward(cached, loss_fn, batch, 2, 'transformer', device='cpu')
+        torch.testing.assert_allclose(actual['loss'], expected.detach())
+        for a, b in zip(cached.parameters(), full.parameters()):
+            torch.testing.assert_allclose(a.grad, b.grad, atol=1e-6, rtol=1e-5)
+
+    def test_supcon_accumulation_and_session_command(self):
+        from measure_training import training_command
+        model = TinyModel().train()
+        reference = copy.deepcopy(model)
+        batch = make_batch(5)
+        batch['video_id'] = ['v0', 'v0', 'v1', 'v2', 'v2']
+        loss_fn = SupConCLIPLoss()
+        torch.manual_seed(42)
+        expected = 0
+        for chunk in split_batch(batch, 3):
+            text, pooled = reference(chunk)
+            expected = expected + len(chunk['video_id']) / 5 * loss_fn(
+                sim_matrix_training(text, pooled, 'transformer'),
+                reference.clip.logit_scale, chunk['video_id'])
+        expected.backward()
+        torch.manual_seed(42)
+        actual = accumulation_backward(model, loss_fn, batch, 3, 'transformer', device='cpu')
+        torch.testing.assert_allclose(actual, expected.detach())
+        for a, b in zip(model.parameters(), reference.parameters()):
+            torch.testing.assert_allclose(a.grad, b.grad, atol=1e-6, rtol=1e-5)
+        self.assertIn('--loss=supcon', training_command('test', 32, 0, 1,
+                                                       grad_cache_chunk_size=4, loss='supcon'))
 
     def test_trainer_updates_once_and_saves_effective_batch_settings(self):
         with tempfile.TemporaryDirectory() as folder:

@@ -48,6 +48,7 @@ def main(argv=None):
     parser.add_argument('--exp-name', default=LEGACY_EXPERIMENT)
     parser.add_argument('--resume', type=Path, help='Explicit checkpoint for a new output directory')
     parser.add_argument('--batch-size', type=int, default=4)
+    parser.add_argument('--loss', choices=('clip', 'supcon'), default='clip')
     chunk_modes = parser.add_mutually_exclusive_group()
     chunk_modes.add_argument('--grad-cache-chunk-size', type=int, default=0)
     chunk_modes.add_argument('--accumulation-chunk-size', type=int, default=0)
@@ -86,13 +87,13 @@ def main(argv=None):
     output = ROOT / 'outputs' / args.exp_name
     legacy_checkpoint = None
     if (args.exp_name == LEGACY_EXPERIMENT and args.batch_size == 4 and args.seed == 24
-            and not (args.grad_cache_chunk_size or args.accumulation_chunk_size)):
+            and args.loss == 'clip' and not (args.grad_cache_chunk_size or args.accumulation_chunk_size)):
         legacy_checkpoint = LEGACY_CHECKPOINT
     options = dict(
         videos_dir=videos_dir, clip_model_path=clip_path,
         grad_cache_chunk_size=args.grad_cache_chunk_size,
         accumulation_chunk_size=args.accumulation_chunk_size,
-        check_recompute=args.check_recompute, seed=args.seed, log_step=args.log_step,
+        check_recompute=args.check_recompute, seed=args.seed, log_step=args.log_step, loss=args.loss,
     )
 
     def session():
@@ -105,7 +106,7 @@ def main(argv=None):
         print(json.dumps({
             'hours': args.hours, 'resume': str(checkpoint) if checkpoint else None,
             'output': str(output), 'command': command,
-            'total_epochs': 5, 'batch_size': args.batch_size,
+            'total_epochs': 5, 'batch_size': args.batch_size, 'loss': args.loss,
         }, indent=2), flush=True)
         if args.dry_run:
             return 0

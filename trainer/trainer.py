@@ -5,6 +5,7 @@ from collections import defaultdict, deque
 from trainer.base_trainer import BaseTrainer
 from modules.metrics import sim_matrix_training, sim_matrix_inference, generate_embeds_per_video_id
 from modules.grad_cache import accumulation_backward, grad_cache_backward
+from modules.loss import paired_loss
 from tqdm import tqdm
 
 
@@ -80,7 +81,7 @@ class Trainer(BaseTrainer):
                 data['video'] = data['video'].to(self.device)
                 text_embeds, video_embeds_pooled = self.model(data)
                 output = sim_matrix_training(text_embeds, video_embeds_pooled, self.pooling_type)
-                loss = self.loss(output, self.model.clip.logit_scale)
+                loss = paired_loss(self.loss, output, self.model.clip.logit_scale, data)
                 loss.backward()
             
             torch.nn.utils.clip_grad_norm_(self.model.parameters(), 1.0)
@@ -163,7 +164,7 @@ class Trainer(BaseTrainer):
                 vid_embed_arr.append(vid_embed.cpu())
                 sims_batch = sim_matrix_training(text_embed, vid_embed_pooled, self.pooling_type)
 
-                curr_loss = self.loss(sims_batch, self.model.clip.logit_scale)
+                curr_loss = paired_loss(self.loss, sims_batch, self.model.clip.logit_scale, data)
                 total_val_loss += curr_loss.item()
 
                 for v_id in data['video_id']:

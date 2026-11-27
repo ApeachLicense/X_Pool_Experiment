@@ -25,14 +25,14 @@ def write_json(path, value):
 def training_command(name, batch_size, seconds, steps, resume=None, *,
                      videos_dir="data/MSRVTT/vids", clip_model_path=None,
                      grad_cache_chunk_size=0, accumulation_chunk_size=0,
-                     check_recompute=False, seed=24, log_step=100):
+                     check_recompute=False, seed=24, log_step=100, loss='clip'):
     command = [
         sys.executable, "-u", "train.py", f"--exp_name={name}",
         f"--videos_dir={videos_dir}", "--dataset_name=MSRVTT", "--msrvtt_train_file=9k",
         f"--batch_size={batch_size}", "--num_workers=2", "--huggingface", "--no_tensorboard",
         f"--grad_cache_chunk_size={grad_cache_chunk_size}",
         f"--accumulation_chunk_size={accumulation_chunk_size}", f"--eval_batch_size={min(batch_size, 4)}",
-        f"--seed={seed}",
+        f"--seed={seed}", f"--loss={loss}",
         "--noclip_lr=3e-5", "--transformer_dropout=0.3", "--evals_per_epoch=0",
         f"--log_step={log_step}", "--profile_training",
         f"--max_train_seconds={seconds}", f"--max_train_steps={steps}",

@@ -59,6 +59,24 @@ PowerShell에서 새 실험 이름을 지정해 시작합니다.
 
 같은 실험 이름과 설정으로 다시 실행하면 `checkpoint-last.pth`에서 이어갑니다. 실행 전에 `--dry-run`으로 데이터 경로와 체크포인트를 확인할 수 있습니다. 실행기는 학습 중 1K-A 평가를 끄며, 최종 체크포인트는 평가 배치 4로 평가합니다. [학습 재개와 평가 명령](RESUME_TRAINING.md)
 
+## Third experiment: SupCon
+
+[Supervised Contrastive Learning (NeurIPS 2020)](https://arxiv.org/abs/2004.11362)의 Eq. (2)를 양방향 text-video contrastive loss로 변형했다. 동일 `video_id`의 모든 교차 모달 조합을 positive로 사용하고, 각 anchor의 positive log-probability를 평균한다. 중복 ID가 없으면 기존 CLIP loss를 그대로 호출한다. 다른 영상 ID의 의미상 일치 여부는 아직 다루지 않는다.
+
+기존 sampler, encoder, pooling, GradCache 및 평가 유사도는 유지한다. 기본 loss는 `clip`으로 남겨 동일 조건 대조 실험을 지원한다. 학습 재개 시 같은 loss 및 실험 이름을 지정한다. 기존 CLIP checkpoint를 SupCon 학습 재개에 사용하지 않는다.
+
+PowerShell 예시 (새 실험, seed 24, 짧은 smoke test):
+
+```powershell
+.\.venv\Scripts\python.exe run_training_session.py --hours 0 --max-steps 10 --exp-name supcon32_smoke_s24 --batch-size 32 --grad-cache-chunk-size 4 --loss supcon --seed 24 --check-recompute
+```
+
+정식 비교는 새 실험 이름과 동일 seed/스케줄로 `--loss clip` 및 `--loss supcon`을 실행한다. 1K-A로 조건을 선택하지 않는다. 동일 영상이 배치에 드물게 들어오면 SupCon의 효과도 제한적이므로 중복 빈도를 먼저 확인하고, sampler 변경은 별도 ablation으로 취급한다.
+
+CPU 회귀 테스트: `python -m unittest discover -s tests -p test_second_experiment.py -v`.
+
+아직 새 손실의 GPU 학습 성능은 측정하지 않았다. 후속 논문 및 실험 계획은 [TODO.md](TODO.md)를 참고한다.
+
 ## 공개 파일 범위
 
 코드, 기존 split·annotation, 실행 설정, 전체 step CSV, GPU 측정 CSV, 로그, 요약 JSON, 초기 6시간 VRAM 그래프를 포함합니다. 영상, 가상환경, 다운로드한 CLIP 가중치와 학습 체크포인트는 포함하지 않습니다. 최종 체크포인트의 해시는 검증 기록에 남아 있으며, 가중치 파일은 원래 실험 PC에 보관되어 있습니다.

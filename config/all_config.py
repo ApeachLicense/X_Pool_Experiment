@@ -40,7 +40,7 @@ class AllConfig(Config):
         parser.add_argument('--embed_dim', type=int, default=512, help="Dimensionality of the model embedding")
 
         # training parameters
-        parser.add_argument('--loss', type=str, default='clip')
+        parser.add_argument('--loss', choices=('clip', 'supcon'), default='clip')
         parser.add_argument('--clip_lr', type=float, default=1e-6, help='Learning rate used for CLIP params')
         parser.add_argument('--noclip_lr', type=float, default=1e-5, help='Learning rate used for new params')
         parser.add_argument('--batch_size', type=int, default=32)
