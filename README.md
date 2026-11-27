@@ -65,17 +65,77 @@ PowerShell에서 새 실험 이름을 지정해 시작합니다.
 
 기존 sampler, encoder, pooling, GradCache 및 평가 유사도는 유지한다. 기본 loss는 `clip`으로 남겨 동일 조건 대조 실험을 지원한다. 학습 재개 시 같은 loss 및 실험 이름을 지정한다. 기존 CLIP checkpoint를 SupCon 학습 재개에 사용하지 않는다.
 
-PowerShell 예시 (새 실험, seed 24, 짧은 smoke test):
+### 1. CPU 회귀 테스트
 
-```powershell
+저장소 루트에서 PowerShell로 실행한다. GPU 학습 전에 아래 테스트가 모두 통과해야 한다.
+
+~~~powershell
+.\.venv\Scripts\python.exe -m unittest discover -s tests -p test_second_experiment.py -v
+~~~
+
+검증 항목:
+
+- 모든 video ID가 서로 다르면 기존 CLIP loss 및 gradient와 정확히 일치하는지 확인
+- 중복 video ID에 대한 양방향 multi-positive loss 및 gradient가 수식과 일치하는지 확인
+- 서로 다른 microbatch에 positive가 있을 때 full-batch와 GradCache의 gradient가 일치하는지 확인
+- gradient accumulation 및 학습 실행 명령의 SupCon 옵션 전달 확인
+
+### 2. GPU smoke test (RTX 3060 Ti, 10 updates)
+
+CPU 테스트 통과 후 실제 MSR-VTT 데이터와 CLIP을 사용해 유효 배치 32, microbatch 4로 짧게 실행한다. Smoke test의 출력은 본 학습과 분리한다.
+
+~~~powershell
 .\.venv\Scripts\python.exe run_training_session.py --hours 0 --max-steps 10 --exp-name supcon32_smoke_s24 --batch-size 32 --grad-cache-chunk-size 4 --loss supcon --seed 24 --check-recompute
-```
+~~~
 
-정식 비교는 새 실험 이름과 동일 seed/스케줄로 `--loss clip` 및 `--loss supcon`을 실행한다. 1K-A로 조건을 선택하지 않는다. 동일 영상이 배치에 드물게 들어오면 SupCon의 효과도 제한적이므로 중복 빈도를 먼저 확인하고, sampler 변경은 별도 ablation으로 취급한다.
+필요하면 명령 끝에 `--dry-run`을 붙여 데이터 경로와 실행 설정을 먼저 확인한다. `--hours 0`은 시간 제한을 끄고 `--max-steps 10`은 optimizer update를 최대 10회로 제한한다.
 
-CPU 회귀 테스트: `python -m unittest discover -s tests -p test_second_experiment.py -v`.
+통과 기준: 정상 종료, 10 updates 완료, 유한한 loss, GradCache feature 재계산 검사 통과, CUDA OOM 없음, checkpoint 저장 확인. `outputs/supcon32_smoke_s24/`의 training log, monitor report, training profile 및 checkpoint를 확인한다. 무작위 배치에서 중복 ID가 없을 수도 있으므로 실제 다중 positive 처리의 정확성은 CPU 테스트로 별도 검증한다. Smoke test는 성능 평가가 아니며 본 학습에 해당 체크포인트를 사용하지 않는다.
 
-아직 새 손실의 GPU 학습 성능은 측정하지 않았다. 후속 논문 및 실험 계획은 [TODO.md](TODO.md)를 참고한다.
+### 3. 본 학습 (Seed 24, 25)
+
+기존 GradCache-32 비교 실험과 동일하게 두 seed에서 각각 5 epochs를 학습한다.
+
+| 항목 | 설정 |
+| --- | --- |
+| 데이터 | MSR-VTT 9K train / 1K-A 최종 평가 |
+| 유효 배치 / microbatch | 32 / 4 |
+| Seed | 24, 25 |
+| Epochs | 5 |
+| Optimizer updates | seed당 28,125 |
+| CLIP / pooling learning rate | 1e-6 / 3e-5 |
+| Loss | SupCon |
+| 초기화 | 기존 사전학습 CLIP 및 새 X-Pool pooling |
+| 세션 | 7시간 단위, 동일 설정으로 재개 |
+
+Seed 24:
+
+~~~powershell
+.\.venv\Scripts\python.exe run_training_session.py --hours 7 --exp-name supcon32_s24 --batch-size 32 --grad-cache-chunk-size 4 --loss supcon --seed 24
+~~~
+
+Seed 25:
+
+~~~powershell
+.\.venv\Scripts\python.exe run_training_session.py --hours 7 --exp-name supcon32_s25 --batch-size 32 --grad-cache-chunk-size 4 --loss supcon --seed 25
+~~~
+
+8GiB GPU 한 장에서 두 실행을 동시에 시작하지 않는다. 각 seed의 첫 실행은 새 실험 디렉터리에서 시작하고, 시간이 끝나면 같은 명령을 다시 실행해 해당 실험의 `checkpoint-last.pth`에서 5 epochs 완료까지 이어간다. Smoke test나 기존 CLIP loss의 체크포인트로 재개하지 않는다. 완료 여부는 training profile 및 checkpoint의 epoch/update 기록으로 확인한다.
+
+### 4. 비교 및 최종 평가
+
+기존 GradCache-32 CLIP loss의 seed별 결과를 기준으로 비교한다. 같은 seed에서 초기화, 데이터 순서, optimizer, learning rate schedule, epoch 및 update 예산을 맞춘다. 기존 기록의 조건이 일치하지 않거나 가중치가 없다면 별도 baseline 실행을 고려한다. 새 대조군이 필요한 경우 위 명령에서 `--loss clip`으로 바꾸고 각각 `clip32_control_s24`, `clip32_control_s25`처럼 별도 실험 이름을 사용한다.
+
+| Seed | 기존 GradCache-32 R@1 | 기존 R@5 | 기존 R@10 | SupCon R@1 | SupCon R@5 | SupCon R@10 |
+| --- | ---: | ---: | ---: | --- | --- | --- |
+| 24 | 45.4% | 72.5% | 81.6% | 미측정 | 미측정 | 미측정 |
+| 25 | 46.1% | 72.9% | 82.0% | 미측정 | 미측정 | 미측정 |
+
+학습 중 1K-A 평가를 사용하지 않고 각 seed의 최종 5번째 epoch 체크포인트만 같은 평가 프로토콜(평가 배치 4)로 평가한다. [학습 재개와 평가 명령](RESUME_TRAINING.md)을 참고한다. R@1/R@5/R@10의 seed별 차이 및 평균 차이, VRAM peak, 학습 시간, training profile의 duplicate_video_batches를 기록한다.
+
+동일 video ID가 없는 배치에서는 기존 CLIP loss와 동일하므로 중복 빈도가 낮으면 개선 폭도 제한적일 수 있다. sampler 변경이나 하이퍼파라미터 선택은 별도 내부 검증셋을 이용한 ablation으로 분리하고 1K-A 결과에 맞춰 조정하지 않는다.
+
+아직 새 손실의 CPU/GPU 테스트 결과 및 학습 성능은 측정하지 않았다. 후속 논문 및 실험 계획은 [TODO.md](TODO.md)를 참고한다.
 
 ## 공개 파일 범위
 
