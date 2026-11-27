@@ -26,6 +26,10 @@ RTX 3060 Ti 8GiB에서 X-Pool의 공식 평가 재현, 시간 제한 학습과 �
 - [분할 실행 설명](RESUME_TRAINING.md)
 - [전체 공개 기록 목록과 SHA-256](results/artifact_manifest.json)
 
+## 코딩 에이전트 작업 지침
+
+자동화된 구현·실험 작업은 [AGENTS.md](AGENTS.md)의 공통 연구 원칙을 따른다. README는 현재 실행 프로토콜, [TODO.md](TODO.md)는 활성 과제와 후속 논문, [RESUME_TRAINING.md](RESUME_TRAINING.md)는 학습 재개 절차를 정의한다. 현재 third 브랜치에서 수행할 작업은 SupCon 검증 및 두 seed 실험이며, 후속 논문은 별도 요청 시 진행한다.
+
 ## 코드 출처
 
 기반 코드는 [layer6ai-labs/xpool](https://github.com/layer6ai-labs/xpool)의 커밋 [`bc88718199007d395136adc99a3e69adbee874a0`](https://github.com/layer6ai-labs/xpool/tree/bc88718199007d395136adc99a3e69adbee874a0)입니다. 원 논문은 **X-Pool: Cross-Modal Language-Video Attention for Text-Video Retrieval, CVPR 2022**입니다. 저자, 논문 인용 형식과 원본 사용법은 [원본 README](README_UPSTREAM.md)에 보존했습니다. 이 저장소는 해당 구현을 바탕으로 수행한 별도 실험 기록입니다.

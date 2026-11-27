@@ -14,7 +14,7 @@ $run = 'msrvtt9k_gradcache32_s24'
 
 세션별 시간은 `--hours`로 조정합니다. `--hours 0`은 시간 제한을 해제하며, 학습은 총 5 epoch에서 종료합니다. `--dry-run`을 붙이면 사용할 경로와 명령을 확인할 수 있습니다. 데이터와 CLIP이 다른 위치에 있으면 각각 `--videos-dir`과 `--clip-model-path`를 지정합니다.
 
-대조군을 재현할 때는 새 실험 이름을 사용하고 `--grad-cache-chunk-size 4` 대신 `--accumulation-chunk-size 4`를 지정합니다. 재개에는 체크포인트와 같은 배치 크기, chunk 설정과 seed가 필요합니다.
+대조군을 재현할 때는 새 실험 이름을 사용하고 `--grad-cache-chunk-size 4` 대신 `--accumulation-chunk-size 4`를 지정합니다. 재개에는 체크포인트와 같은 배치 크기, chunk 설정, seed 및 loss가 필요합니다. SupCon은 [README의 실행 명령](README.md#third-experiment-supcon)에 따라 `--loss supcon`과 해당 실험 이름을 유지합니다. 기존 CLIP loss 또는 smoke test 체크포인트에서 SupCon 본 학습을 재개하지 않습니다. 공통 실험 지침은 [AGENTS.md](AGENTS.md)를 참고합니다.
 
 최종 체크포인트에서 `global_step=28125`와 `partial_epoch=false`를 확인한 뒤 1K-A를 평가합니다. 아래 경로는 데이터와 CLIP을 저장소 안에 둔 경우의 예입니다.
 

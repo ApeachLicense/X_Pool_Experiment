@@ -2,6 +2,8 @@
 
 GradCache-32 (microbatch 4) and X-Pool text-conditioned pooling remain the baseline.
 
+공통 연구 지침: [AGENTS.md](AGENTS.md). 실행 및 평가 프로토콜: [README.md](README.md#third-experiment-supcon). 현재 활성 과제는 01번이며 02–05번은 별도 요청 후 진행한다.
+
 ## 01. Supervised Contrastive Learning (implemented; experiments pending)
 
 NeurIPS 2020 · 이미지 분류 및 표현 학습
@@ -10,10 +12,14 @@ NeurIPS 2020 · 이미지 분류 및 표현 학습
 
 - [x] `--loss supcon` 옵션, GradCache 및 일반/누적 학습 경로 연결
 - [x] CPU 회귀 테스트 코드 추가 (실행 결과는 별도 기록 필요)
-- [ ] CPU 테스트 및 RTX 3060 Ti smoke test 실행
+- [ ] CPU 회귀 테스트 실행 및 결과 기록
+- [ ] RTX 3060 Ti GPU smoke test (10 updates) 실행 및 결과 기록
 - [ ] GradCache-32의 배치 내 동일 영상 ID 중복 빈도 측정
-- [ ] 동일 seed·셔플·학습 예산의 CLIP vs SupCon 비교 (내부 검증셋 사용)
-- [ ] 필요시 positive-aware sampler를 별도 실험으로 분리해 검증
+- [ ] Seed 24 본 학습 (9K, 5 epochs, 28,125 updates)
+- [ ] Seed 25 본 학습 (9K, 5 epochs, 28,125 updates)
+- [ ] 두 seed 최종 체크포인트의 1K-A 평가 및 기존 GradCache-32와 대응 비교
+- [ ] 실험 결과·로그·한계 기록 및 README 업데이트
+- [ ] 필요시 positive-aware sampler 등 별도 ablation을 내부 검증셋으로 검증 (별도 승인/실험 설계 후 진행)
 
 [논문 읽기](https://arxiv.org/abs/2004.11362)
 
